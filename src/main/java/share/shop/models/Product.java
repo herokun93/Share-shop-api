@@ -1,0 +1,58 @@
+package share.shop.models;
+
+import lombok.*;
+import share.shop.models.audit.UserDateAudit;
+
+import javax.persistence.*;
+import java.util.Collection;
+
+@Entity
+@Getter
+@Setter
+@ToString
+@Data
+@NoArgsConstructor
+public class Product extends UserDateAudit {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private boolean hot;
+    private int rating;
+    private String description;
+    private String descriptionSort;
+    private String tiktok;
+    private boolean enable;
+
+
+
+//
+//    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+//    @JoinColumn(name="user_id")
+//    private User user;
+
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="country_id")
+    private Country country;
+
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="subCategory_id")
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private SubCategory subCategory;
+
+
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tag_id", referencedColumnName = "id")
+    private Collection<Tag> tags;
+
+
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    private Collection<Image> images;
+
+}
