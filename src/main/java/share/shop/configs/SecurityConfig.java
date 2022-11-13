@@ -58,7 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
                 .antMatchers("/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html",
                         "/**/*.css", "/**/*.js")
-                .permitAll().antMatchers("/api/auth/**", "/api/movies/**", "/api/users/**","/api/products/**","/api/categories/**","/api/tags/**","/api/countries/**","/api/subCategories/**").permitAll()
+                .permitAll().antMatchers("/api/auth/**", "/api/movies/**", "/api/users/**","/api/products/**","/api/categories/**","/api/tags/**","/api/countries/**",
+                        "/api/subCategories/**","/api/images/**").permitAll()
                 .antMatchers("/api/user/checkEmailAvailability").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/movies/**", "/api/users/**").permitAll().anyRequest()
                 .authenticated();

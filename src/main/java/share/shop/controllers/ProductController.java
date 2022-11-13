@@ -7,17 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import share.shop.models.Image;
 import share.shop.models.Product;
-import share.shop.payloads.ApiResponse;
-import share.shop.payloads.ImageResponse;
 import share.shop.payloads.ProductInformation;
 import share.shop.services.ProductService;
 
 import javax.validation.constraints.Min;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
