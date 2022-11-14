@@ -12,6 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import share.shop.models.Image;
 import share.shop.models.Product;
 import share.shop.payloads.ImagesRequest;
+import share.shop.securities.CurrentUser;
+import share.shop.securities.UserLogged;
+import share.shop.securities.UserPrincipal;
 import share.shop.services.ImageService;
 import share.shop.services.ProductService;
 import share.shop.utils.FileUploadUtil;
@@ -117,12 +120,19 @@ public class ImageController {
     public ResponseEntity deleteImage(@PathVariable("id") Long id){
         Optional<Image> imageGet = imageService.findById(id);
 
+
+
         if(imageGet.isEmpty()){
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
 
-        imageService.deleteById(id);
+        UserLogged userLogged = new UserLogged();
 
-        return new ResponseEntity(null, HttpStatus.OK);
+        if(imageGet.get().getId() == userLogged.getId()){
+            imageService.deleteById(id);
+            return new ResponseEntity(null, HttpStatus.OK);
+        }else{
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
     }
 }
