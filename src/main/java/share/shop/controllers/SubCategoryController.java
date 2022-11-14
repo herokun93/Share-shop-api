@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import share.shop.models.Category;
 import share.shop.models.SubCategory;
+import share.shop.payloads.CategoryRequest;
 import share.shop.payloads.PagedResponse;
 import share.shop.payloads.SubCategoryRequest;
 import share.shop.payloads.SubCategoryResponse;
@@ -59,6 +60,45 @@ public class SubCategoryController {
 
         SubCategoryResponse subCategoryResponse = new SubCategoryResponse();
         return new ResponseEntity(subCategoryResponse.subCategoryConvert(subCategory), HttpStatus.OK);
+    }
+
+    @PutMapping("/subCategories/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> putSubCategory(
+            @Valid  @PathVariable("id") @Min(0) Long subCategoryId,
+            @Valid @RequestBody SubCategoryRequest subCategoryRequest) {
+
+        String name = subCategoryRequest.getName();
+        Long categoryId = subCategoryRequest.getCategoryId();
+
+
+
+        Optional<Category> categoryGet = categoryService.findById(categoryId);
+
+        if(categoryGet.isEmpty())  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+        Optional<SubCategory> subCategoryGet = subCategoryService.findById(subCategoryId);
+
+        if(subCategoryGet.isEmpty())  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+        subCategoryGet = subCategoryService.findByName(name);
+
+        if(!subCategoryGet.isEmpty()) return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+
+        SubCategory subCategoryNew = SubCategory.builder()
+                .name(name)
+                .id(subCategoryId)
+                .category(categoryGet.get())
+                .build();
+
+        if(Objects.isNull(subCategoryNew))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+        SubCategory subCategory = subCategoryService.save(subCategoryNew);
+
+        if(Objects.isNull(subCategory))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity(subCategory, HttpStatus.OK);
     }
 
     @GetMapping(value="/subCategories")

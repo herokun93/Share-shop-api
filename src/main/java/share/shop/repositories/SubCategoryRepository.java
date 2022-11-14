@@ -13,5 +13,6 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory,Long> {
     SubCategory save(SubCategory subCategory);
     boolean existsByName(String name);
     Optional<SubCategory> findById(Long id);
+    Optional<SubCategory> findByName(String name);
     Page<SubCategory> findAllByCategoryId(Long id, Pageable pageable);
 }

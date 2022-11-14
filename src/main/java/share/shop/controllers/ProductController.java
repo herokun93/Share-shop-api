@@ -127,7 +127,7 @@ public class ProductController {
 
         if(Objects.isNull(productNew))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
 
-        productService.save(productNew);
+        productService.saveAndFlush(productNew);
 
 
         Image image = new Image();

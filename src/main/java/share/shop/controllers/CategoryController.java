@@ -27,7 +27,7 @@ public class CategoryController {
 
     @PostMapping("/categories")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<?> postCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
 
         String name = categoryRequest.getName();
 
@@ -36,6 +36,38 @@ public class CategoryController {
         if(!categoryGet.isEmpty())  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
 
         Category categoryNew = Category.builder().name(categoryRequest.getName()).build();
+
+        if(Objects.isNull(categoryNew))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+        Category category = categoryService.save(categoryNew);
+
+        if(Objects.isNull(category))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity(category, HttpStatus.OK);
+    }
+
+    @PutMapping("/categories/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> putCategory(
+            @Valid  @PathVariable("id") @Min(0) Long categoryId,
+            @Valid @RequestBody CategoryRequest categoryRequest) {
+
+        String name = categoryRequest.getName();
+
+
+        Optional<Category> categoryGet = categoryService.findById(categoryId);
+
+        if(categoryGet.isEmpty())  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+        categoryGet =categoryService.findByName(name);
+
+        if(!categoryGet.isEmpty())  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+
+        Category categoryNew = Category.builder()
+                        .name(categoryRequest.getName())
+                .id(categoryId)
+                .build();
 
         if(Objects.isNull(categoryNew))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
 

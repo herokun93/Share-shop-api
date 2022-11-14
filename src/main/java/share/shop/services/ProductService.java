@@ -26,6 +26,8 @@ public class ProductService {
     }
     public Product save(Product product){return productRepository.save(product);};
 
+    public Product saveAndFlush(Product product){return productRepository.saveAndFlush(product);};
+
     public PagedResponse getProducts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
         Page<Product> products = productRepository.findAll(pageable);

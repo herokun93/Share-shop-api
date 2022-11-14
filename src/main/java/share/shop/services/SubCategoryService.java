@@ -33,6 +33,8 @@ public class SubCategoryService {
     public boolean existsByName(String name){return subCategoryRepository.existsByName(name);}
     public Optional<SubCategory> findById(Long id){return  subCategoryRepository.findById(id);};
 
+    public Optional<SubCategory> findByName(String name){return  subCategoryRepository.findByName(name);}
+
     public PagedResponse getAllSubCategories(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
         Page<SubCategory> subCategories = subCategoryRepository.findAll(pageable);
