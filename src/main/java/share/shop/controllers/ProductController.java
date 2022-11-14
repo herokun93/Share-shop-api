@@ -12,8 +12,6 @@ import share.shop.payloads.PagedResponse;
 import share.shop.payloads.ProductCard;
 import share.shop.payloads.ProductDetails;
 import share.shop.payloads.ProductRequest;
-import share.shop.securities.CurrentUser;
-import share.shop.securities.UserPrincipal;
 import share.shop.services.*;
 import share.shop.utils.AppConstants;
 import share.shop.utils.FileUploadUtil;

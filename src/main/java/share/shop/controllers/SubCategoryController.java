@@ -8,14 +8,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import share.shop.models.Category;
 import share.shop.models.SubCategory;
-import share.shop.payloads.CategoryRequest;
 import share.shop.payloads.PagedResponse;
 import share.shop.payloads.SubCategoryRequest;
 import share.shop.payloads.SubCategoryResponse;
-import share.shop.repositories.CategoryRepository;
-import share.shop.repositories.SubCategoryRepository;
 import share.shop.services.CategoryService;
-import share.shop.services.ProductService;
 import share.shop.services.SubCategoryService;
 import share.shop.utils.AppConstants;
 
