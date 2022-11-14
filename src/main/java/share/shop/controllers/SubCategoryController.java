@@ -8,14 +8,18 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import share.shop.models.Category;
 import share.shop.models.SubCategory;
+import share.shop.payloads.PagedResponse;
 import share.shop.payloads.SubCategoryRequest;
 import share.shop.payloads.SubCategoryResponse;
 import share.shop.repositories.CategoryRepository;
 import share.shop.repositories.SubCategoryRepository;
 import share.shop.services.CategoryService;
+import share.shop.services.ProductService;
 import share.shop.services.SubCategoryService;
+import share.shop.utils.AppConstants;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -29,6 +33,8 @@ public class SubCategoryController {
 
     @Autowired
     private CategoryService categoryService;
+
+
 
     @ResponseBody
     @PostMapping("/subCategories")
@@ -53,6 +59,21 @@ public class SubCategoryController {
 
         SubCategoryResponse subCategoryResponse = new SubCategoryResponse();
         return new ResponseEntity(subCategoryResponse.subCategoryConvert(subCategory), HttpStatus.OK);
+    }
+
+    @GetMapping(value="/subCategories")
+    public PagedResponse getAllSubCategories(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return subCategoryService.getAllSubCategories(page,size);
+    }
+
+    @GetMapping(value="/subCategories/{id}/products")
+    public PagedResponse getAllProductForSubCategory(
+            @PathVariable("id") @Min(0) int id,
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return subCategoryService.getAllProductForSubCategory(id,page,size);
     }
 
 

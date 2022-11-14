@@ -4,17 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import share.shop.models.Category;
 import share.shop.models.User;
 import share.shop.payloads.AuthRequest;
 import share.shop.payloads.CategoryRequest;
+import share.shop.payloads.PagedResponse;
 import share.shop.services.CategoryService;
+import share.shop.utils.AppConstants;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -45,4 +45,20 @@ public class CategoryController {
 
         return new ResponseEntity(category, HttpStatus.OK);
     }
+
+    @GetMapping(value="/categories")
+    public PagedResponse getAllCategories(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return categoryService.getAllCategories(page,size);
+    }
+
+    @GetMapping(value="/categories/{id}/subCategory")
+    public PagedResponse getAllSubcategoryOfCategory(
+            @PathVariable("id") @Min(0) int categoryId,
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return categoryService.getAllSubCategoryOfCategory(categoryId,page,size);
+    }
+
 }

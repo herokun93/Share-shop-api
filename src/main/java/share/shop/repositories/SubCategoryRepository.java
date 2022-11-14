@@ -1,5 +1,7 @@
 package share.shop.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import share.shop.models.SubCategory;
@@ -11,4 +13,5 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory,Long> {
     SubCategory save(SubCategory subCategory);
     boolean existsByName(String name);
     Optional<SubCategory> findById(Long id);
+    Page<SubCategory> findAllByCategoryId(Long id, Pageable pageable);
 }

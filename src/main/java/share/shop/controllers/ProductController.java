@@ -65,7 +65,7 @@ public class ProductController {
 
     @ResponseBody
     @PostMapping(value="/products",consumes = {"multipart/form-data"})
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
     public ResponseEntity postProduct(@ModelAttribute ProductRequest productRequest){
         String  name = productRequest.getName();
         boolean hot = productRequest.isHot();
@@ -158,7 +158,7 @@ public class ProductController {
     }
 
     @GetMapping(value="/products")
-    public PagedResponse getAllMovies(
+    public PagedResponse getAllProducts(
                                       @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
                                       @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return productService.getProducts(page,size);
