@@ -8,9 +8,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import share.shop.models.*;
+import share.shop.payloads.PagedResponse;
+import share.shop.payloads.ProductCard;
 import share.shop.payloads.ProductDetails;
 import share.shop.payloads.ProductRequest;
+import share.shop.securities.CurrentUser;
+import share.shop.securities.UserPrincipal;
 import share.shop.services.*;
+import share.shop.utils.AppConstants;
 import share.shop.utils.FileUploadUtil;
 import share.shop.utils.ImageToUrl;
 
@@ -48,6 +53,16 @@ public class ProductController {
         return  new ResponseEntity(productDetails.productDetailsConvert(product.get()), HttpStatus.OK);
     }
 
+    @GetMapping("/products/{id}/card")
+    public ResponseEntity getProductCard(@PathVariable("id") @Min(0) long id){
+        Optional<Product> product = productService.findById(id);
+        ProductCard productCard = new ProductCard();
+        if(!product.isPresent()){
+            new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
+        return  new ResponseEntity(productCard.productCardConvert(product.get()), HttpStatus.OK);
+    }
+
     @ResponseBody
     @PostMapping(value="/products",consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ADMIN')")
@@ -75,8 +90,6 @@ public class ProductController {
 
         if(countryGet.isEmpty() )
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-
-        System.out.println("Check");
 
 
         List<String> fileList = new ArrayList<>();
@@ -134,15 +147,20 @@ public class ProductController {
             e.printStackTrace();
         }
 
-
         image.setProduct(productNew);
         image.setPriority(1);
         imageService.save(image);
-
 
         fileList.add(ImageToUrl.toUrl(smallImage));
         fileList.add(ImageToUrl.toUrl(mediumImage));
 
         return new ResponseEntity(null, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/products")
+    public PagedResponse getAllMovies(
+                                      @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+                                      @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return productService.getProducts(page,size);
     }
 }
