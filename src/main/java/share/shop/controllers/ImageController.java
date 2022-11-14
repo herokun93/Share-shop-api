@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -37,7 +38,7 @@ public class ImageController {
     private ProductService productService;
 
     @PostMapping(value= "/images",consumes = {"multipart/form-data"})
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
     public ResponseEntity uploadImages(@ModelAttribute ImagesRequest imagesRequest) {
 
         List<String> fileList = new ArrayList<>();
@@ -109,5 +110,19 @@ public class ImageController {
 
         InputStream out = Files.newInputStream(uploadPath);
         return out.readAllBytes();
+    }
+
+    @DeleteMapping(value= "/images/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
+    public ResponseEntity deleteImage(@PathVariable("id") Long id){
+        Optional<Image> imageGet = imageService.findById(id);
+
+        if(imageGet.isEmpty()){
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
+
+        imageService.deleteById(id);
+
+        return new ResponseEntity(null, HttpStatus.OK);
     }
 }

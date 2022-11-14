@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import share.shop.models.Image;
 import share.shop.repositories.ImageRepository;
 
+import java.util.Optional;
+
 @Service
 public class ImageService {
 
@@ -16,4 +18,12 @@ public class ImageService {
     public Image getImageByName(String name){
         return  imageRepository.getImageByName(name);
     };
+
+    public Optional<Image>findById(Long id){
+        return imageRepository.findById(id);
+    }
+
+    public void deleteById(long id){
+        imageRepository.deleteById(id);
+    }
 }

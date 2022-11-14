@@ -163,4 +163,12 @@ public class ProductController {
                                       @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return productService.getProducts(page,size);
     }
+
+    @GetMapping(value="/products/created/{id}")
+    public PagedResponse getAllProductsForCreated(
+            @PathVariable("id") @Min(0) long createdId,
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return productService.getAllProductsForCreated(createdId,page,size);
+    }
 }

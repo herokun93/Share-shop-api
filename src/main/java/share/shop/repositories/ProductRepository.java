@@ -17,4 +17,5 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     Product save(Product product);
 
     Page<Product> findAllBySubCategoryId(long id, Pageable pageable);
+    Page<Product> findAllByCreatedBy(long id, Pageable pageable);
 }

@@ -45,4 +45,26 @@ public class ProductService {
         return new PagedResponse<>(productCardListPage, products.getNumber(), products.getSize(), products.getTotalElements(),
                 products.getTotalPages(), products.isLast());
     }
+
+    public PagedResponse getAllProductsForCreated(Long createdId,int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
+        Page<Product> products = productRepository.findAllByCreatedBy(createdId,pageable);
+
+        if(products.getNumberOfElements()==0){
+            return new PagedResponse<>(Collections.emptyList(), products.getNumber(), products.getSize(),
+                    products.getTotalElements(), products.getTotalPages(), products.isLast());
+        }
+
+
+
+        List<ProductCard> productCardListPage = products.map(product -> {
+            ProductCard productCard = new ProductCard();
+            return  productCard.productCardConvert(product);
+        }).getContent();
+
+        return new PagedResponse<>(productCardListPage, products.getNumber(), products.getSize(), products.getTotalElements(),
+                products.getTotalPages(), products.isLast());
+    }
+
+
 }
