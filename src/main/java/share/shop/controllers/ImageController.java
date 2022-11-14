@@ -47,6 +47,9 @@ public class ImageController {
             Optional<Product> product = productService.findById(productId);
 
             MultipartFile[] files = imagesRequest.getFiles();
+
+            if(files.length%2==1) return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
             List<Image> imageList = new ArrayList<>();
 
 

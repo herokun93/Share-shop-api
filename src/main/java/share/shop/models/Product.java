@@ -7,11 +7,10 @@ import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
-@Getter
-@Setter
-@ToString
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Product extends UserDateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

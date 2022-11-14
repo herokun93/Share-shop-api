@@ -17,7 +17,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductInformation extends UserDateAuditResponse {
+public class ProductDetails extends UserDateAuditResponse {
     private Long id;
     private String name;
     private boolean hot;
@@ -31,7 +31,7 @@ public class ProductInformation extends UserDateAuditResponse {
     private List<ImageResponse> imageResponseList;
     private List<TagResponse> tagResponseList;
 
-    public ProductInformation productInformationConvert(Product product){
+    public ProductDetails productDetailsConvert(Product product){
         ModelMapper modelMapper = new ModelMapper();
         imageResponseList = new ArrayList<>();
 
@@ -49,10 +49,10 @@ public class ProductInformation extends UserDateAuditResponse {
         });
 
 
-        ProductInformation productInformation = modelMapper.map(product,ProductInformation.class);
-        productInformation.setImageResponseList(imageResponseList);
-        productInformation.setTagResponseList(tagResponseList);
+        ProductDetails productDetails = modelMapper.map(product, ProductDetails.class);
+        productDetails.setImageResponseList(imageResponseList);
+        productDetails.setTagResponseList(tagResponseList);
 
-        return  productInformation;
+        return productDetails;
     }
 }
