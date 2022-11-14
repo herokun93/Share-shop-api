@@ -5,12 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import share.shop.models.Category;
 import share.shop.models.Tag;
-import share.shop.payloads.CategoryRequest;
-import share.shop.payloads.PagedResponse;
-import share.shop.payloads.TagRequest;
-import share.shop.payloads.TagResponse;
+import share.shop.payloads.*;
 import share.shop.services.TagService;
 import share.shop.utils.AppConstants;
 
@@ -81,5 +77,24 @@ public class TagController {
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return tagService.getAllTags(page,size);
+    }
+
+    @GetMapping(value="/tags/{id}/products")
+    public PagedResponse getAllProductsOfTag(
+            @Valid  @PathVariable("id") @Min(0) Long tagId,
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return tagService.getAllTags(page,size);
+    }
+
+    @PostMapping(value="/tags/{id}/addProduct")
+    public PagedResponse postTagForProduct(
+            @Valid  @PathVariable("id") @Min(0) Long tagId,
+            @Valid @RequestBody ProductIdRequest productIdRequest) {
+
+        Long productId = productIdRequest.getId();
+
+        tagService.addTagForProduct(tagId,productId);
+        return null;
     }
 }

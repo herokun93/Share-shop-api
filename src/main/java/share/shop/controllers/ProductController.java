@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.*;
 import share.shop.payloads.PagedResponse;
 import share.shop.payloads.ProductCard;
@@ -78,16 +79,11 @@ public class ProductController {
 
 
 
-        Optional<SubCategory> subCategoryGet = subCategoryService.findById(subCategoryId);
+        SubCategory subCategoryGet = subCategoryService.findById(subCategoryId)
+                .orElseThrow(()->new ResourceNotFoundException("Product","subCategoryId",subCategoryId));
 
-        Optional<Country> countryGet = countryService.findById(countryId);
-
-
-        if(subCategoryGet.isEmpty() )
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-
-        if(countryGet.isEmpty() )
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        Country countryGet = countryService.findById(countryId)
+                .orElseThrow(()->new ResourceNotFoundException("Product","countryId",countryId));
 
 
         List<String> fileList = new ArrayList<>();
@@ -117,8 +113,8 @@ public class ProductController {
                 .description(description)
                 .tiktok(tiktok)
                 .enable(enable)
-                .country(countryGet.get())
-                .subCategory(subCategoryGet.get())
+                .country(countryGet)
+                .subCategory(subCategoryGet)
                 .descriptionSort(descriptionSort)
                 .build();
 

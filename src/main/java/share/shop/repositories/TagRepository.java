@@ -1,7 +1,10 @@
 package share.shop.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import share.shop.models.Tag;
 
 import java.util.Optional;
@@ -16,4 +19,9 @@ public interface TagRepository extends JpaRepository<Tag,Long> {
     Optional<Tag> findByName(String name);
 
     boolean existsByName(String name);
+
+    @Query(value = "INSERT INTO product_tags(products_id, tags_id) VALUES (?2, ?1)",nativeQuery = true)
+    @Modifying
+    @Transactional
+    void addTagForProduct(Long tagId,Long productId);
 }

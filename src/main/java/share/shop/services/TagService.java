@@ -50,4 +50,8 @@ public class TagService {
         return new PagedResponse<>(tagResponses,tags.getNumber(),tags.getSize(),tags.getTotalElements(),
                 tags.getTotalPages(),tags.isLast());
     }
+
+    public void addTagForProduct(Long tagId,Long productId){
+        tagRepository.addTagForProduct(tagId,productId);
+    }
 }
