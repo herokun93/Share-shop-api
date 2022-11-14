@@ -14,4 +14,5 @@ public class SubCategoryService {
     public SubCategory save(SubCategory subCategory){
         return  subCategoryRepository.save(subCategory);
     }
+    public boolean existsByName(String name){return subCategoryRepository.existsByName(name);}
 }

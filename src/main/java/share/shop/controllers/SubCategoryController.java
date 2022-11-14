@@ -16,6 +16,7 @@ import share.shop.services.CategoryService;
 import share.shop.services.SubCategoryService;
 
 import javax.validation.Valid;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -34,15 +35,22 @@ public class SubCategoryController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity postSubCategory(@RequestBody @Valid SubCategoryRequest subCategoryRequest){
 
+        String name = subCategoryRequest.getName();
+        Long categoryId = subCategoryRequest.getCategoryId();
 
-        Optional<Category> categoryNew = categoryService.findById(subCategoryRequest.getCategoryId());
+        Optional<Category> categoryGet = categoryService.findById(categoryId);
+        if(!categoryGet.isEmpty()) return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+        if(!subCategoryService.existsByName(name)) return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
 
         SubCategory subCategoryNew = SubCategory.builder()
-                .name(subCategoryRequest.getName())
-                .category(categoryNew.get())
+                .name(name)
+                .category(categoryGet.get())
                 .build();
 
         SubCategory subCategory = subCategoryService.save(subCategoryNew);
+        if(Objects.isNull(subCategory)) return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
         SubCategoryResponse subCategoryResponse = new SubCategoryResponse();
         return new ResponseEntity(subCategoryResponse.subCategoryConvert(subCategory), HttpStatus.OK);
     }

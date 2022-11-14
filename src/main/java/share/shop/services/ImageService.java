@@ -10,8 +10,10 @@ public class ImageService {
 
     @Autowired
     private ImageRepository imageRepository;
-
     public Image save(Image image){
         return imageRepository.save(image);
     }
+    public Image getImageByName(String name){
+        return  imageRepository.getImageByName(name);
+    };
 }

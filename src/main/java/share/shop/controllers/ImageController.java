@@ -94,17 +94,17 @@ public class ImageController {
         return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
     }
 
-//    @GetMapping(value = "/images/getName/{name}", produces = MediaType.IMAGE_PNG_VALUE)
-//    public @ResponseBody byte[] getFileByName(@PathVariable("name") String name) throws IOException {
-//        //  InputStream in = getClass().getResourceAsStream("/image/xyz.png");
-//
-//        IImage iImage = imageService.getImageByName(name);
-//        Path uploadPath;
-//        if(iImage.getUrlMedium().indexOf(name)>-1){
-//            uploadPath = Paths.get(iImage.getUrlMedium()) ;
-//        }else uploadPath = Paths.get(iImage.getUrlSmall()) ;
-//
-//        InputStream out = Files.newInputStream(uploadPath);
-//        return out.readAllBytes();
-//    }
+    @GetMapping(value = "/images/{name}", produces = MediaType.IMAGE_PNG_VALUE)
+    public @ResponseBody byte[] getFileByName(@PathVariable("name") String name) throws IOException {
+        //  InputStream in = getClass().getResourceAsStream("/image/xyz.png");
+        name = "\\" +name;
+        Image image = imageService.getImageByName(name);
+        Path uploadPath;
+        if(image.getUrlMedium().indexOf(name)>-1){
+            uploadPath = Paths.get(image.getUrlMedium()) ;
+        }else uploadPath = Paths.get(image.getUrlSmall()) ;
+
+        InputStream out = Files.newInputStream(uploadPath);
+        return out.readAllBytes();
+    }
 }

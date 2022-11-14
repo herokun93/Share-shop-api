@@ -7,4 +7,5 @@ import share.shop.models.SubCategory;
 @Repository
 public interface SubCategoryRepository extends JpaRepository<SubCategory,Long> {
     SubCategory save(SubCategory subCategory);
+    boolean existsByName(String name);
 }

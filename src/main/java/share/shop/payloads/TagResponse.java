@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import share.shop.models.Tag;
 import share.shop.models.User;
 import share.shop.payloads.audit.DateAuditResponse;
+import share.shop.payloads.audit.UserDateAuditResponse;
 
 @Getter
 @Setter
@@ -12,7 +13,7 @@ import share.shop.payloads.audit.DateAuditResponse;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TagResponse extends User {
+public class TagResponse extends DateAuditResponse {
     private Long id;
     private String name;
     private boolean enable;

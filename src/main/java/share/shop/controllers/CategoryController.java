@@ -15,6 +15,7 @@ import share.shop.payloads.CategoryRequest;
 import share.shop.services.CategoryService;
 
 import javax.validation.Valid;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -27,8 +28,21 @@ public class CategoryController {
     @PostMapping("/categories")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody CategoryRequest categoryRequest) {
+
+        String name = categoryRequest.getName();
+
+        Optional<Category> categoryGet = categoryService.findByName(name);
+
+        if(!categoryGet.isEmpty())  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
         Category categoryNew = Category.builder().name(categoryRequest.getName()).build();
+
+        if(Objects.isNull(categoryNew))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
         Category category = categoryService.save(categoryNew);
+
+        if(Objects.isNull(category))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
         return new ResponseEntity(category, HttpStatus.OK);
     }
 }

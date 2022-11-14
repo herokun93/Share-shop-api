@@ -4,6 +4,7 @@ import lombok.*;
 import org.modelmapper.ModelMapper;
 import share.shop.models.Image;
 import share.shop.models.Product;
+import share.shop.models.Tag;
 import share.shop.payloads.audit.UserDateAuditResponse;
 
 import java.util.ArrayList;
@@ -28,10 +29,11 @@ public class ProductInformation extends UserDateAuditResponse {
     private Long countryId;
     private Long subCategoryId;
     private List<ImageResponse> imageResponseList;
+    private List<TagResponse> tagResponseList;
 
     public ProductInformation productInformationConvert(Product product){
         ModelMapper modelMapper = new ModelMapper();
-        List<ImageResponse> imageResponseList = new ArrayList<>();
+        imageResponseList = new ArrayList<>();
 
         Collection<Image> images = product.getImages();
         images.forEach(e->{
@@ -39,9 +41,17 @@ public class ProductInformation extends UserDateAuditResponse {
             imageResponseList.add(imageResponse.imageResponseConvert(e));
         });
 
+        tagResponseList = new ArrayList<>();
+        Collection<Tag> tags = product.getTags();
+        tags.forEach(t->{
+            TagResponse tagResponse = new TagResponse();
+            tagResponseList.add(tagResponse.tagConvert(t));
+        });
+
 
         ProductInformation productInformation = modelMapper.map(product,ProductInformation.class);
         productInformation.setImageResponseList(imageResponseList);
+        productInformation.setTagResponseList(tagResponseList);
 
         return  productInformation;
     }

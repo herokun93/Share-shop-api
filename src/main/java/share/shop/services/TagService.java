@@ -20,4 +20,7 @@ public class TagService {
     public Optional<Tag> finById(Long id){
         return tagRepository.findById(id);
     }
+    public Optional<Tag> findByName(String name){return tagRepository.findByName(name);};
+
+    public boolean existsByName(String name){return  tagRepository.existsByName(name);}
 }

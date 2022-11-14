@@ -16,6 +16,7 @@ import share.shop.payloads.TagResponse;
 import share.shop.services.TagService;
 
 import javax.validation.Valid;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -28,8 +29,17 @@ public class TagController {
     @PostMapping("/tags")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> postTag(@Valid @RequestBody TagRequest tagRequest) {
+
+        String name = tagRequest.getName();
+        Optional<Tag> tagGet = tagService.findByName(name);
+        if(!tagGet.isEmpty()) return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
         Tag tagNew = Tag.builder().name(tagRequest.getName()).build();
         Tag tag = tagService.save(tagNew);
+
+        if(Objects.isNull(tag))return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+
         TagResponse tagResponse = new TagResponse();
         return new ResponseEntity(tagResponse.tagConvert(tag), HttpStatus.OK);
     }
