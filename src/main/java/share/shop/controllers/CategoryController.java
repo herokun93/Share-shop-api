@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.Category;
 import share.shop.models.User;
 import share.shop.payloads.AuthRequest;
@@ -55,23 +56,15 @@ public class CategoryController {
         String name = categoryRequest.getName();
 
 
-        Optional<Category> categoryGet = categoryService.findById(categoryId);
+        Category category = categoryService.findById(categoryId).orElseThrow(()-> {
+                    throw new ResourceNotFoundException("Category","id",categoryId);});
 
-        if(categoryGet.isEmpty())  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        Optional<Category> categoryGet =categoryService.findByName(name);
 
-        categoryGet =categoryService.findByName(name);
+        if(!categoryGet.isEmpty())  return new ResponseEntity("Name is exist", HttpStatus.BAD_REQUEST);
 
-        if(!categoryGet.isEmpty())  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-
-
-        Category categoryNew = Category.builder()
-                        .name(categoryRequest.getName())
-                .id(categoryId)
-                .build();
-
-        if(Objects.isNull(categoryNew))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-
-        Category category = categoryService.save(categoryNew);
+        category.setName(name);
+        category = categoryService.save(category);
 
         if(Objects.isNull(category))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
 

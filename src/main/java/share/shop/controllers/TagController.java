@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import share.shop.exceptions.AppException;
+import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.Tag;
 import share.shop.payloads.*;
 import share.shop.services.TagService;
@@ -49,27 +51,25 @@ public class TagController {
         String name = tagRequest.getName();
 
 
-        Optional<Tag> tagGet = tagService.finById(tagId);
+        Tag tag = tagService.finById(tagId).orElseThrow(()->{
+            throw new ResourceNotFoundException("Tag","id",tagId);
+        });
 
-        if(tagGet.isEmpty())  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-
-        tagGet =tagService.findByName(name);
+        Optional<Tag> tagGet =tagService.findByName(name);
 
         if(!tagGet.isEmpty())  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
 
 
-        Tag tagNew = Tag.builder()
-                .name(name)
-                .id(tagId)
-                .build();
-
-        if(Objects.isNull(tagNew))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-
-        Tag tag = tagService.save(tagNew);
+        tag.setName(name);
+        tag = tagService.save(tag);
 
         if(Objects.isNull(tag))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
 
-        return new ResponseEntity(tag, HttpStatus.OK);
+        TagResponse tagResponse = new TagResponse();
+
+
+        return new ResponseEntity(tagResponse.tagConvert(tag), HttpStatus.OK);
+
     }
 
     @GetMapping(value="/tags")

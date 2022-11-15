@@ -1,10 +1,12 @@
 package share.shop.securities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import share.shop.models.User;
+import share.shop.services.UserService;
 
 import java.util.Collection;
 import java.util.List;
@@ -14,6 +16,9 @@ import java.util.stream.Collectors;
 public class UserPrincipal implements UserDetails {
     private static final long serialVersionUID = 1L;
 
+
+    @Autowired
+    UserService userService;
     private Long id;
 
     private String email;
