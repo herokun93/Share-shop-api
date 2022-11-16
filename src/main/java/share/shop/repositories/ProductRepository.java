@@ -15,5 +15,6 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     Product saveAndFlush(Product product);
 
     Page<Product> findAllBySubCategoryId(long id, Pageable pageable);
+    Page<Product> findAllByCountryId(Long id, Pageable pageable);
     Page<Product> findAllByCreatedBy(long id, Pageable pageable);
 }

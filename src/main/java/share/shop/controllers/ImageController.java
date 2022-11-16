@@ -11,12 +11,15 @@ import org.springframework.web.multipart.MultipartFile;
 import share.shop.models.Image;
 import share.shop.models.Product;
 import share.shop.payloads.ImagesRequest;
+import share.shop.payloads.PagedResponse;
 import share.shop.securities.UserLogged;
 import share.shop.services.ImageService;
 import share.shop.services.ProductService;
+import share.shop.utils.AppConstants;
 import share.shop.utils.FileUploadUtil;
 import share.shop.utils.ImageToUrl;
 
+import javax.validation.constraints.Min;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -131,4 +134,6 @@ public class ImageController {
             return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
     }
+
+
 }

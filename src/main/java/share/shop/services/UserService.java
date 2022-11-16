@@ -18,7 +18,7 @@ public class UserService {
     private final MailService mailService;
 
 
-    Optional<User> findById(Long id){
+    public Optional<User> findById(Long id){
         return userRepository.findById(id);
     }
 }

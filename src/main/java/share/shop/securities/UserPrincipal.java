@@ -17,8 +17,6 @@ public class UserPrincipal implements UserDetails {
     private static final long serialVersionUID = 1L;
 
 
-    @Autowired
-    UserService userService;
     private Long id;
 
     private String email;
