@@ -20,10 +20,10 @@ import java.time.Instant;
 public class UserProfile {
     private Long id;
     private String email;
-    private boolean isAccountNonExpired;
-    private boolean isAccountNonLocked;
-    private boolean isCredentialsNonExpired;
-    private boolean isEnabled;
+    private Instant birthday;
+    private String mobile;
+    private String address;
+    private String avatar;
     private Long prefectureId;
 
     public UserProfile userProfileConvert(User user){

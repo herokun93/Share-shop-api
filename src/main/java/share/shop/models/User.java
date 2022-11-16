@@ -4,6 +4,7 @@ import org.hibernate.annotations.NaturalId;
 import share.shop.models.audit.DateAudit;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -31,6 +32,12 @@ public class User extends DateAudit {
     @NotBlank
     @Size(max = 100)
     private String password;
+
+    private Instant birthday;
+    private String mobile;
+    private String address;
+    private String avatar;
+
 
     private boolean isAccountNonExpired =true;
     private boolean isAccountNonLocked = true;
@@ -132,5 +139,37 @@ public class User extends DateAudit {
 
     public void setPrefecture(Prefecture prefecture) {
         this.prefecture = prefecture;
+    }
+
+    public Instant getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Instant birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
