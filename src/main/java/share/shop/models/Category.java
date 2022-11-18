@@ -23,7 +23,12 @@ public class Category extends UserDateAudit {
     private String name;
     private boolean enable;
 
+    public Category(String name, boolean enable) {
+        this.name = name;
+        this.enable = enable;
+    }
+
     @OneToMany(mappedBy = "category")
-    private List<SubCategory> categories;
+    private List<SubCategory> subCategories;
 
 }

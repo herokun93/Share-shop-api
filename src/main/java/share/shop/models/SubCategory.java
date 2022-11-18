@@ -19,10 +19,15 @@ import java.util.Collection;
 @Builder
 public class SubCategory extends UserDateAudit {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private boolean enable;
+
+    public SubCategory(String name, boolean enable) {
+        this.name = name;
+        this.enable = enable;
+    }
 
     @JsonIgnore
     @ManyToOne

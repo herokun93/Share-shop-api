@@ -25,4 +25,8 @@ public class Prefecture extends DateAudit {
 
     @NotBlank()
     private String name;
+
+    public Prefecture(String name) {
+        this.name = name;
+    }
 }

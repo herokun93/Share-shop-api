@@ -1,6 +1,7 @@
 package share.shop;
 
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
+import com.github.javafaker.Faker;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,6 +22,11 @@ public class ShopApplication {
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
+	}
+
+	@Bean
+	Faker faker(){
+		return new Faker();
 	}
 
 }

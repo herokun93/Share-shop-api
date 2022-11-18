@@ -20,6 +20,10 @@ public class Country extends UserDateAudit {
     private String name;
     private boolean enable;
 
+    public Country(String name, boolean enable) {
+        this.name = name;
+        this.enable = enable;
+    }
 
     @OneToMany(mappedBy = "country")
     @ToString.Exclude

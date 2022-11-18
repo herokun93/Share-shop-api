@@ -23,9 +23,17 @@ public class Product extends UserDateAudit {
     private String tiktok;
     private boolean enable;
 
+    public Product(String name, boolean hot, int rating, String description, String descriptionSort, String tiktok, boolean enable) {
+        this.name = name;
+        this.hot = hot;
+        this.rating = rating;
+        this.description = description;
+        this.descriptionSort = descriptionSort;
+        this.tiktok = tiktok;
+        this.enable = enable;
+    }
 
-
-//
+    //
 //    @ManyToOne(fetch = FetchType.LAZY,optional = false)
 //    @JoinColumn(name="user_id")
 //    private User user;
