@@ -53,15 +53,17 @@ public class SampleDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("Loading sample data");
+        log.info("Start add sample data");
 
 //        createCountries();
 //        createPrefectures();
 //        createRoles();
+//        setAdmin();
 //        createUsers();
-//       createCategories();
+//        createCategories();
 //        createSubCategory();
 //        createProducts();
+        log.info("Finish add sample data");
 
 
 
@@ -89,6 +91,26 @@ public class SampleDataLoader implements CommandLineRunner {
                 .mapToObj(i->new Prefecture(faker.address().cityName())).toList();
 
         prefectureRepository.saveAll(prefectures);
+    }
+
+    public void setAdmin(){
+        String password = passwordEncoder.encode("20222023");
+
+        Set<Role> roles = new HashSet<>();
+
+        Role roleAdmin = roleRepository.findByName(RoleName.ROLE_ADMIN).get();
+        roles.add(roleAdmin);
+
+        Role roleUser = roleRepository.findByName(RoleName.ROLE_ADMIN).get();
+        roles.add(roleUser);
+
+        Prefecture prefecture = prefectureRepository.getReferenceById(Long.valueOf(1));
+
+        User userAdmin = new User("anhxthangdang@gmail.com",password);
+        userAdmin.setRoles(roles);
+        userAdmin.setPrefecture(prefecture);
+
+        userRepository.save(userAdmin);
     }
 
     public void createUsers(){

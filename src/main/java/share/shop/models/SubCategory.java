@@ -27,6 +27,7 @@ public class SubCategory extends UserDateAudit {
     public SubCategory(String name, boolean enable) {
         this.name = name;
         this.enable = enable;
+
     }
 
     @JsonIgnore
