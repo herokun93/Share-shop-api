@@ -8,21 +8,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import share.shop.exceptions.AppException;
+import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.Role;
 import share.shop.models.RoleName;
 import share.shop.models.User;
-import share.shop.payloads.ApiResponse;
-import share.shop.payloads.AuthRequest;
-import share.shop.payloads.JwtAuthenticationResponse;
-import share.shop.payloads.UserProfile;
+import share.shop.payloads.*;
 import share.shop.repositories.RoleRepository;
 import share.shop.repositories.UserRepository;
 import share.shop.securities.JwtTokenProvider;
+import share.shop.services.UserService;
 
 import javax.validation.Valid;
 import java.util.Collections;
@@ -36,30 +32,61 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    UserService userService;
 
     @Autowired
     JwtTokenProvider tokenProvider;
 
-    @PostMapping("/signinOrSignup")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequest authRequest) {
-        System.out.println("signinOrSignup");
-        Optional<User> foundUser = userRepository.findByEmail(authRequest.getEmail());
+//    @PostMapping("/signIn")
+//    public ResponseEntity<?> signIn(@Valid @RequestBody LoginRequest loginRequest) {
+//        Optional<User> foundUser = userRepository.findByEmail(loginRequest.getEmail());
+//
+//        if(foundUser.isPresent()){
+//
+//            String email = loginRequest.getEmail();
+//            String password = loginRequest.getPassword();;
+//
+//            User user = new User(email,password);
+//
+//            User userSave =
+//
+//            return
+//        }
+//
+//        return registerUser(authRequest);
+//    }
 
-        if (foundUser.isPresent()) {
-            return loginUser(foundUser.get(), authRequest);
-        }
+//    @PostMapping("/signUp")
+//    public ResponseEntity<?> signUp(@Valid @RequestBody AuthRequest authRequest) {
+//        Optional<User> foundUser = userRepository.findByEmail(authRequest.getEmail());
+//
+//        if (foundUser.isPresent()) {
+//            return loginUser(foundUser.get(), authRequest);
+//        }
+//
+//        return registerUser(authRequest);
+//    }
+//
+//    @PostMapping("/signinOrSignup")
+//    public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequest authRequest) {
+//        System.out.println("signinOrSignup");
+//        Optional<User> foundUser = userRepository.findByEmail(authRequest.getEmail());
+//
+//        if (foundUser.isPresent()) {
+//            return loginUser(foundUser.get(), authRequest);
+//        }
+//
+//        return registerUser(authRequest);
+//    }
 
-        return registerUser(authRequest);
-    }
+    @PostMapping("/login")
+    private ResponseEntity<?> loginUser(@Valid @RequestBody AuthRequest authRequest) {
 
-    private ResponseEntity<?> loginUser(User user, AuthRequest authRequest) {
+        String email = authRequest.getEmail();
+
+        User userGet = userService.findByEmail(email).orElseThrow(()-> {
+            throw new ResourceNotFoundException("user","email",email);});
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
 
@@ -70,31 +97,44 @@ public class AuthController {
 
         String jwt = tokenProvider.generateToken(authentication);
 
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userProfile.userProfileConvert(user)));
+        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userProfile.userProfileConvert(userGet)));
     }
 
-    private ResponseEntity<?> registerUser(AuthRequest authRequest) {
-        System.out.println("Register new user");
-        if (userRepository.existsByEmail(authRequest.getEmail())) {
-            return new ResponseEntity<>(new ApiResponse(false, "Email Address already in use!"),
+    @PostMapping("/register")
+    private ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+        String email = registerRequest.getEmail();
+        if (userService.existsByEmail(email)) {
+            return new ResponseEntity<>(new ApiResponse(false, "Email Address exist!"),
                     HttpStatus.BAD_REQUEST);
         }
 
         // Creating user's account
-        User user = new User(authRequest.getEmail(), authRequest.getPassword());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        String username = registerRequest.getUsername();
+        String password = registerRequest.getPassword();
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new AppException("User Role not set."));
+        User user = new User();
+        user.newUser(email,username,password);
 
-        user.setRoles(Collections.singleton(userRole));
+        User newUser = userService.createUserSendEmailActiveAccount(user);
 
-        User newUser = userRepository.save(user);
 
         if (newUser != null) {
-            return loginUser(newUser, authRequest);
+            return new ResponseEntity<>("Created user and sent active", HttpStatus.OK);
         }
 
-        return new ResponseEntity<String>("Your Signup Failed", HttpStatus.EXPECTATION_FAILED);
+        return new ResponseEntity<String>("Your register Failed", HttpStatus.EXPECTATION_FAILED);
+    }
+
+    @RequestMapping(value = "/verify/{token}", method = RequestMethod.GET)
+    public ResponseEntity  verify(@PathVariable("token") String token){
+
+        User getUser = userService.findByCreateToken(token).orElseThrow(()-> {
+            throw new ResourceNotFoundException("User","createToken",token);});
+
+        if(userService.userVerify(getUser)){
+            return new ResponseEntity<>("Verify is ok", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("verify is false", HttpStatus.OK);
     }
 }

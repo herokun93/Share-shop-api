@@ -5,7 +5,6 @@ import share.shop.models.audit.DateAudit;
 
 import javax.persistence.*;
 import java.time.Instant;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,6 +28,10 @@ public class User extends DateAudit {
     @Email
     private String email;
 
+
+    @NotBlank
+    private String username;
+
     @NotBlank
     @Size(max = 100)
     private String password;
@@ -39,10 +42,16 @@ public class User extends DateAudit {
     private String avatar;
 
 
-    private boolean isAccountNonExpired =true;
-    private boolean isAccountNonLocked = true;
-    private boolean isCredentialsNonExpired = true;
-    private boolean isEnabled = true;
+    private boolean isAccountNonExpired;
+    private boolean isAccountNonLocked;
+    private boolean isCredentialsNonExpired;
+    private boolean isEnabled;
+
+    private Instant createExpiry;
+    private String createToken;
+    private Instant resetExpiry;
+    private String resetToken;
+
 
 //    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
 //    private Collection<Product> products;
@@ -61,6 +70,12 @@ public class User extends DateAudit {
 
     public User() {
 
+    }
+
+    public User(String email,String username, String password) {
+        this.email = email;
+        this.password = password;
+        this.username = username;
     }
 
     public User(String email, String password) {
@@ -172,4 +187,56 @@ public class User extends DateAudit {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Instant getCreateExpiry() {
+        return createExpiry;
+    }
+
+    public void setCreateExpiry(Instant createExpiry) {
+        this.createExpiry = createExpiry;
+    }
+
+    public Instant getResetExpiry() {
+        return resetExpiry;
+    }
+
+    public void setResetExpiry(Instant resetExpiry) {
+        this.resetExpiry = resetExpiry;
+    }
+
+    public String getCreateToken() {
+        return createToken;
+    }
+
+    public void setCreateToken(String createToken) {
+        this.createToken = createToken;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public void newUser(String email, String username, String password){
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.isAccountNonExpired = true;
+        this.isAccountNonLocked = true;
+        this.isCredentialsNonExpired = true;
+        this.isEnabled = false;
+    }
+
+
 }

@@ -106,7 +106,7 @@ public class SampleDataLoader implements CommandLineRunner {
 
         Prefecture prefecture = prefectureRepository.getReferenceById(Long.valueOf(1));
 
-        User userAdmin = new User("anhxthangdang@gmail.com",password);
+        User userAdmin = new User("anhxthangdang@gmail.com","anhxthangdang",password);
         userAdmin.setRoles(roles);
         userAdmin.setPrefecture(prefecture);
 
@@ -123,7 +123,7 @@ public class SampleDataLoader implements CommandLineRunner {
         Prefecture prefecture = prefectureRepository.getReferenceById(Long.valueOf(1));
 
         List<User> users = IntStream.range(1,5)
-                .mapToObj(u->new User(faker.internet().emailAddress(),password)).toList();
+                .mapToObj(u->new User(faker.internet().emailAddress(),faker.name().name(),password)).toList();
 
         users.forEach(u->{
             u.setRoles(roles);

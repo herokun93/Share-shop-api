@@ -55,10 +55,8 @@ public class UserController {
     }
 
 
-    @PutMapping("/users/{id}/info")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/users/info")
     public ResponseEntity<?> putUserInfo(
-            @Valid @PathVariable("id") @Min(0) Long userId,
             @Valid @RequestBody UserProfileUpdateRequest newUser) {
 
        // String name = categoryRequest.getName();
@@ -79,10 +77,8 @@ public class UserController {
         return new ResponseEntity(null, HttpStatus.OK);
     }
 
-    @PutMapping("/users/{id}/pass")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/users/pass")
     public ResponseEntity<?> putUserPass(
-            @Valid @PathVariable("id") @Min(0) Long userId,
             @Valid @RequestBody UserUpdatePassRequest newUser) {
 
         // String name = categoryRequest.getName();
@@ -103,10 +99,8 @@ public class UserController {
         return new ResponseEntity(null, HttpStatus.OK);
     }
 
-    @PutMapping("/users/{id}/email")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/users/email")
     public ResponseEntity<?> putUserEmail(
-            @Valid @PathVariable("id") @Min(0) Long userId,
             @Valid @RequestBody UserUpdateEmailRequest newUser) {
 
         // String name = categoryRequest.getName();
