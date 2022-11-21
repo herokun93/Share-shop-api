@@ -13,8 +13,12 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserUpdatePassRequest {
-    @Email
+
     @NotBlank
     @Size(min = 8,max=16,message = "Pass must be between 8 and 16 characters")
-    private String password;
+    private String passwordNew;
+
+    @NotBlank
+    @Size(min = 8,max=16,message = "Pass must be between 8 and 16 characters")
+    private String passwordOld;
 }

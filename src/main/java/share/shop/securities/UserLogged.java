@@ -3,8 +3,10 @@ package share.shop.securities;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 import share.shop.controllers.UserController;
 import share.shop.models.Role;
 import share.shop.models.User;
@@ -17,31 +19,19 @@ import java.util.Optional;
 @Setter
 public class UserLogged {
 
-    Object principal;
+    Authentication auth;
 
-    private String username;
-    private Long id;
-    Optional<User> user;
+    private long id;
+
+    private String email;
+
 
     @Autowired
     private UserRepository userRepository;
 
 
     public UserLogged() {
-        principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails)principal).getUsername();
-        } else {
-            username = principal.toString();
-        }
-        user = userRepository.findByEmail(username);
-        if(user.isPresent()) this.id = user.get().getId();
-    }
-    boolean isAdmin(){
-        Collection<Role> roles = user.get().getRoles();
-        roles.forEach(role->{
-
-        });
-        return true;
+        auth = SecurityContextHolder.getContext().getAuthentication();
+        email = auth.getName();
     }
 }

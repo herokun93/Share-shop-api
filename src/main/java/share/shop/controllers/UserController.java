@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.Category;
@@ -12,8 +13,10 @@ import share.shop.payloads.*;
 import share.shop.repositories.ProductRepository;
 import share.shop.repositories.UserRepository;
 import share.shop.securities.CurrentUser;
+import share.shop.securities.UserLogged;
 import share.shop.securities.UserPrincipal;
 import share.shop.services.ProductService;
+import share.shop.services.UserService;
 import share.shop.utils.AppConstants;
 
 import javax.validation.Valid;
@@ -25,14 +28,17 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping("/users/me")
     public UserProfile getCurrentUser(@CurrentUser UserPrincipal currentUser) {
-        User user = userRepository.findByEmail(currentUser.getEmail())
+        User user = userService.findByEmail(currentUser.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("User", "Email", currentUser.getEmail()));
 
         UserProfile userProfile = new UserProfile();
@@ -42,7 +48,7 @@ public class UserController {
 
     @GetMapping("/users/checkEmailAvailability")
     public UserIdentityAvailability checkEmailAvailability(@RequestParam(value = "email") String email) {
-        Boolean isAvailable = !userRepository.existsByEmail(email);
+        Boolean isAvailable = !userService.existsByEmail(email);
         return new UserIdentityAvailability(isAvailable);
     }
 
@@ -78,46 +84,50 @@ public class UserController {
     }
 
     @PutMapping("/users/pass")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> putUserPass(
-            @Valid @RequestBody UserUpdatePassRequest newUser) {
+            @Valid @RequestBody UserUpdatePassRequest userPass) {
 
         // String name = categoryRequest.getName();
+        String passNew = userPass.getPasswordNew();
+        String passOld = userPass.getPasswordOld();
 
-//
-//        Category category = categoryService.findById(categoryId).orElseThrow(()-> {
-//            throw new ResourceNotFoundException("Category","id",categoryId);});
-//
-//        Optional<Category> categoryGet =categoryService.findByName(name);
-//
-//        if(!categoryGet.isEmpty())  return new ResponseEntity("Name is exist", HttpStatus.BAD_REQUEST);
-//
-//        category.setName(name);
-//        category = categoryService.save(category);
-//
-//        if(Objects.isNull(category))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+        UserLogged userLogged = new UserLogged();
+        String email = userLogged.getEmail();
+        User user = userService.findByEmailAndPassword(email,passwordEncoder.encode(passOld)).orElseThrow(
+                () -> new ResourceNotFoundException("User", "password", passOld));
+
+        user.setPassword(passwordEncoder.encode(passNew));
+
+        user = userService.saveAndFlush(user);
+        if(Objects.isNull(user)){
+            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
 
         return new ResponseEntity(null, HttpStatus.OK);
     }
 
-    @PutMapping("/users/email")
-    public ResponseEntity<?> putUserEmail(
-            @Valid @RequestBody UserUpdateEmailRequest newUser) {
+    @PutMapping("/users/name")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> putUserUserName(
+            @Valid @RequestBody UserUpdateNameRequest newNameUser) {
 
-        // String name = categoryRequest.getName();
+            String name = newNameUser.getUsername();
 
-//
-//        Category category = categoryService.findById(categoryId).orElseThrow(()-> {
-//            throw new ResourceNotFoundException("Category","id",categoryId);});
-//
-//        Optional<Category> categoryGet =categoryService.findByName(name);
-//
-//        if(!categoryGet.isEmpty())  return new ResponseEntity("Name is exist", HttpStatus.BAD_REQUEST);
-//
-//        category.setName(name);
-//        category = categoryService.save(category);
-//
-//        if(Objects.isNull(category))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+            UserLogged userLogged = new UserLogged();
+            String email = userLogged.getEmail();
+            User user = userService.findByEmail(email).orElseThrow(
+                    () -> new ResourceNotFoundException("User", "Email", ""));
+
+            user.setUsername(name);
+
+            user = userService.saveAndFlush(user);
+            if(Objects.isNull(user)){
+                return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+            }
 
         return new ResponseEntity(null, HttpStatus.OK);
     }
+
 }

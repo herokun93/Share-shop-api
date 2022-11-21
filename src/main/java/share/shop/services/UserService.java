@@ -43,7 +43,11 @@ public class UserService {
     public boolean existsByEmail(String email) {return  userRepository.existsByEmail(email);}
     public User save(User user){return  userRepository.save(user);}
 
+    public User saveAndFlush(User user){return  userRepository.saveAndFlush(user);}
+
     public Optional<User> findByCreateToken(String token){return userRepository.findByCreateToken(token);}
+
+    public Optional<User>findByEmailAndPassword(String email,String password){return userRepository.findByEmailAndPassword(email,password);};
 
 
 

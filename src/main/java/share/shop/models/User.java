@@ -228,6 +228,14 @@ public class User extends DateAudit {
         this.resetToken = resetToken;
     }
 
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
     public void newUser(String email, String username, String password){
         this.email = email;
         this.username = username;
@@ -237,6 +245,10 @@ public class User extends DateAudit {
         this.isCredentialsNonExpired = true;
         this.isEnabled = false;
     }
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="shop_id")
+    private Shop shop;
 
 
 }
