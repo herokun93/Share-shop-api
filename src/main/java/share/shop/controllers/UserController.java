@@ -7,11 +7,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import share.shop.exceptions.ResourceNotFoundException;
-import share.shop.models.Category;
 import share.shop.models.User;
 import share.shop.payloads.*;
-import share.shop.repositories.ProductRepository;
-import share.shop.repositories.UserRepository;
 import share.shop.securities.CurrentUser;
 import share.shop.securities.UserLogged;
 import share.shop.securities.UserPrincipal;
@@ -22,7 +19,6 @@ import share.shop.utils.AppConstants;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.Objects;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -83,10 +79,12 @@ public class UserController {
         return new ResponseEntity(null, HttpStatus.OK);
     }
 
+
     @PutMapping(value = "/users/pass",consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> putUserPass(
-            @Valid @RequestBody UserUpdatePassRequest userPass) {
+
+             @RequestBody  @Valid UserUpdatePassRequest userPass) {
 
         String passNew = userPass.getPasswordNew();
         String passOld = userPass.getPasswordOld();

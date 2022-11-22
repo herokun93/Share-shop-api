@@ -28,7 +28,7 @@ public class Category extends UserDateAudit {
         this.enable = enable;
     }
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category",fetch = FetchType.LAZY)
     private List<SubCategory> subCategories;
 
 }

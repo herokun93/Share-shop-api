@@ -25,7 +25,7 @@ public class Country extends UserDateAudit {
         this.enable = enable;
     }
 
-    @OneToMany(mappedBy = "country")
+    @OneToMany(mappedBy = "country",fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Collection<Product> products;

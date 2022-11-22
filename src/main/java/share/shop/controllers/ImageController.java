@@ -8,13 +8,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.Image;
 import share.shop.models.Product;
+import share.shop.models.Shop;
+import share.shop.models.User;
 import share.shop.payloads.ImagesRequest;
 import share.shop.payloads.PagedResponse;
 import share.shop.securities.UserLogged;
 import share.shop.services.ImageService;
 import share.shop.services.ProductService;
+import share.shop.services.UserService;
 import share.shop.utils.AppConstants;
 import share.shop.utils.FileUploadUtil;
 import share.shop.utils.ImageToUrl;
@@ -39,15 +43,27 @@ public class ImageController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private UserService userService;
+
     @PostMapping(value= "/images",consumes = {"multipart/form-data"})
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
     public ResponseEntity uploadImages(@ModelAttribute ImagesRequest imagesRequest) {
 
         List<String> fileList = new ArrayList<>();
+         int priority = imagesRequest.getPriority();
 
         try {
             long productId = imagesRequest.getProductId();
             Optional<Product> product = productService.findById(productId);
+
+            UserLogged userLogged = new UserLogged();
+            String email = userLogged.getEmail();
+            User user = userService.findByEmail(email).orElseThrow(
+                    () -> new ResourceNotFoundException("User", "Email", ""));
+
+            Shop shop =user.getShop();
+
 
             MultipartFile[] files = imagesRequest.getFiles();
 
@@ -59,8 +75,9 @@ public class ImageController {
             for(int i=0;i<imagesRequest.getFiles().length;i++){
 
                 Image newImage = Image.builder()
-                        .priority(0)
+                        .priority(priority)
                         .product(product.get())
+                        .shop(shop)
                         .build();
 
                 try {

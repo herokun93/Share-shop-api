@@ -81,7 +81,7 @@ public class AuthController {
 //        return registerUser(authRequest);
 //    }
 
-    @PostMapping(value = "/login",consumes = {"multipart/form-data"})
+    @PostMapping(value = "/login")
     private ResponseEntity<?> loginUser(@Valid @RequestBody AuthRequest authRequest) {
 
         String email = authRequest.getEmail();

@@ -31,11 +31,11 @@ public class SubCategory extends UserDateAudit {
     }
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="category_id", nullable=false)
     private Category category;
 
-    @OneToMany(mappedBy = "subCategory")
+    @OneToMany(mappedBy = "subCategory",fetch = FetchType.LAZY)
     private Collection<Product> products;
 
 }

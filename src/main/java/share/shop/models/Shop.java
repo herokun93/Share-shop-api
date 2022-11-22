@@ -24,10 +24,13 @@ public class Shop extends UserDateAudit {
     private String email;
     private String address;
 
-    @OneToMany(mappedBy = "shop")
+    @OneToMany(mappedBy = "shop",fetch = FetchType.LAZY)
     private Collection<Product> products;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
+
+    @OneToMany(mappedBy = "shop",fetch = FetchType.LAZY)
+    private Collection<Image> images;
 }

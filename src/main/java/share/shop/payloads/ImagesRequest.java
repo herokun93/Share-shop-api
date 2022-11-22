@@ -20,4 +20,6 @@ public class ImagesRequest {
     private long productId;
     @NotBlank
     private MultipartFile[] files;
+    @NotBlank
+    private int priority;
 }

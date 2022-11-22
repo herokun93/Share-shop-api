@@ -22,11 +22,13 @@ public class Image extends UserDateAudit {
     private int priority;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="product_id")
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     private Product product;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="shop_id")
+    private Shop shop;
 
 
 }

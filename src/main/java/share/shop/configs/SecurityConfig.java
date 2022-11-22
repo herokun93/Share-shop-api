@@ -60,7 +60,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css", "/**/*.js")
                 .permitAll().antMatchers(
                         "/api/auth/**",
-                        "/api/movies/**",
                         "/api/users/**",
                         "/api/products/**",
                         "/api/categories/**",
@@ -69,8 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/subCategories/**",
                         "/api/images/**").permitAll()
                 .antMatchers("/api/user/checkEmailAvailability").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/movies/**", "/api/users/**").permitAll().anyRequest()
-                .authenticated();
+                .antMatchers( "/api/roles/**").hasRole("ADMIN")
+                .antMatchers( "/api/users/**").permitAll().anyRequest().authenticated();
 
         // Add our custom JWT security filter
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
