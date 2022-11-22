@@ -81,7 +81,7 @@ public class AuthController {
 //        return registerUser(authRequest);
 //    }
 
-    @PostMapping("/login")
+    @PostMapping(value = "/login",consumes = {"multipart/form-data"})
     private ResponseEntity<?> loginUser(@Valid @RequestBody AuthRequest authRequest) {
 
         String email = authRequest.getEmail();
@@ -102,7 +102,7 @@ public class AuthController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userProfile.userProfileConvert(userGet)));
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register",consumes = {"multipart/form-data"})
     private ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         String email = registerRequest.getEmail();
         if (userService.existsByEmail(email)) {

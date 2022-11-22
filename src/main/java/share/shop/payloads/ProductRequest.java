@@ -48,7 +48,7 @@ public class ProductRequest {
     @NotBlank
     private Long subCategoryId;
 
-
-    @NotBlank
-    private MultipartFile[] files;
+//
+//    @NotBlank
+//    private MultipartFile[] files;
 }

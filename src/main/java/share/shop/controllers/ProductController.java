@@ -42,7 +42,7 @@ public class ProductController {
     @Autowired
     private ImageService imageService;
 
-    @GetMapping("/products/{id}")
+    @GetMapping(value = "/products/{id}")
     public ResponseEntity getProduct(@PathVariable("id") @Min(0) long id){
         Optional<Product> product = productService.findById(id);
         ProductDetails productDetails = new ProductDetails();
@@ -52,7 +52,7 @@ public class ProductController {
         return  new ResponseEntity(productDetails.productDetailsConvert(product.get()), HttpStatus.OK);
     }
 
-    @GetMapping("/products/{id}/card")
+    @GetMapping(value = "/products/{id}/card")
     public ResponseEntity getProductCard(@PathVariable("id") @Min(0) long id){
         Optional<Product> product = productService.findById(id);
         ProductCard productCard = new ProductCard();
@@ -86,25 +86,25 @@ public class ProductController {
                 .orElseThrow(()->new ResourceNotFoundException("Product","countryId",countryId));
 
 
-        List<String> fileList = new ArrayList<>();
-        MultipartFile[] files = productRequest.getFiles();
-
-
-        String smallImageExtension;
-        String mediumImageExtension;
-        String smallImage;
-        String mediumImage;
-        String url ;
-        if(files.length==2){
-
-            smallImageExtension = StringUtils.getFilenameExtension(files[0].getOriginalFilename());
-            mediumImageExtension = StringUtils.getFilenameExtension(files[1].getOriginalFilename());
-            smallImage =  StringUtils.cleanPath(files[0].getOriginalFilename());
-            mediumImage =  StringUtils.cleanPath(files[1].getOriginalFilename());
-
-        }else{
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-        }
+//        List<String> fileList = new ArrayList<>();
+//        MultipartFile[] files = productRequest.getFiles();
+//
+//
+//        String smallImageExtension;
+//        String mediumImageExtension;
+//        String smallImage;
+//        String mediumImage;
+//        String url ;
+//        if(files.length==2){
+//
+//            smallImageExtension = StringUtils.getFilenameExtension(files[0].getOriginalFilename());
+//            mediumImageExtension = StringUtils.getFilenameExtension(files[1].getOriginalFilename());
+//            smallImage =  StringUtils.cleanPath(files[0].getOriginalFilename());
+//            mediumImage =  StringUtils.cleanPath(files[1].getOriginalFilename());
+//
+//        }else{
+//            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+//        }
 
         Product productNew = Product.builder()
                 .name(name)
@@ -123,32 +123,34 @@ public class ProductController {
 
         productService.saveAndFlush(productNew);
 
-
-        Image image = new Image();
-
-
-        try {
-            url = FileUploadUtil.saveFile(smallImageExtension, files[0],Long.toString(productNew.getId()));
-            image.setUrlMedium(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            url = FileUploadUtil.saveFile(mediumImageExtension, files[1],Long.toString(productNew.getId()));
-            image.setUrlSmall(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        image.setProduct(productNew);
-        image.setPriority(1);
-        imageService.save(image);
-
-        fileList.add(ImageToUrl.toUrl(smallImage));
-        fileList.add(ImageToUrl.toUrl(mediumImage));
-
         return new ResponseEntity(null, HttpStatus.OK);
+
+
+//        Image image = new Image();
+//
+//
+//        try {
+//            url = FileUploadUtil.saveFile(smallImageExtension, files[0],Long.toString(productNew.getId()));
+//            image.setUrlMedium(url);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        try {
+//            url = FileUploadUtil.saveFile(mediumImageExtension, files[1],Long.toString(productNew.getId()));
+//            image.setUrlSmall(url);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        image.setProduct(productNew);
+//        image.setPriority(1);
+//        imageService.save(image);
+//
+//        fileList.add(ImageToUrl.toUrl(smallImage));
+//        fileList.add(ImageToUrl.toUrl(mediumImage));
+
+
     }
 
     @GetMapping(value="/products")

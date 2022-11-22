@@ -34,7 +34,7 @@ public class SubCategoryController {
 
 
     @ResponseBody
-    @PostMapping("/subCategories")
+    @PostMapping(value = "/subCategories",consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity postSubCategory(@RequestBody @Valid SubCategoryRequest subCategoryRequest){
 
@@ -58,7 +58,7 @@ public class SubCategoryController {
         return new ResponseEntity(subCategoryResponse.subCategoryConvert(subCategory), HttpStatus.OK);
     }
 
-    @PutMapping("/subCategories/{id}")
+    @PutMapping(value = "/subCategories/{id}",consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> putSubCategory(
             @Valid  @PathVariable("id") @Min(0) Long subCategoryId,

@@ -26,7 +26,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
-    @PostMapping("/categories")
+    @PostMapping(value = "/categories",consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> postCategory(@Valid @RequestBody CategoryRequest categoryRequest) {
 
@@ -47,7 +47,7 @@ public class CategoryController {
         return new ResponseEntity(category, HttpStatus.OK);
     }
 
-    @PutMapping("/categories/{id}")
+    @PutMapping(value = "/categories/{id}",consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> putCategory(
             @Valid  @PathVariable("id") @Min(0) Long categoryId,

@@ -61,7 +61,7 @@ public class UserController {
     }
 
 
-    @PutMapping("/users/info")
+    @PutMapping(value = "/users/info",consumes = {"multipart/form-data"})
     public ResponseEntity<?> putUserInfo(
             @Valid @RequestBody UserProfileUpdateRequest newUser) {
 
@@ -83,32 +83,37 @@ public class UserController {
         return new ResponseEntity(null, HttpStatus.OK);
     }
 
-    @PutMapping("/users/pass")
+    @PutMapping(value = "/users/pass",consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> putUserPass(
             @Valid @RequestBody UserUpdatePassRequest userPass) {
 
-        // String name = categoryRequest.getName();
         String passNew = userPass.getPasswordNew();
         String passOld = userPass.getPasswordOld();
 
 
         UserLogged userLogged = new UserLogged();
         String email = userLogged.getEmail();
-        User user = userService.findByEmailAndPassword(email,passwordEncoder.encode(passOld)).orElseThrow(
+        User user = userService.findByEmail(email).orElseThrow(
                 () -> new ResourceNotFoundException("User", "password", passOld));
 
-        user.setPassword(passwordEncoder.encode(passNew));
+        if(passwordEncoder.matches(passOld,user.getPassword())){
+            user.setPassword(passwordEncoder.encode(passNew));
 
-        user = userService.saveAndFlush(user);
-        if(Objects.isNull(user)){
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+            user = userService.saveAndFlush(user);
+            if(Objects.isNull(user)){
+                return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+            }
+
+            return new ResponseEntity(null, HttpStatus.OK);
+        }else {
+            return new ResponseEntity("Old password is wrong", HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity(null, HttpStatus.OK);
+
     }
 
-    @PutMapping("/users/name")
+    @PutMapping(value = "/users/name",consumes = {"multipart/form-data"})
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> putUserUserName(
             @Valid @RequestBody UserUpdateNameRequest newNameUser) {
@@ -124,7 +129,7 @@ public class UserController {
 
             user = userService.saveAndFlush(user);
             if(Objects.isNull(user)){
-                return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity("Cannot update password", HttpStatus.BAD_REQUEST);
             }
 
         return new ResponseEntity(null, HttpStatus.OK);
