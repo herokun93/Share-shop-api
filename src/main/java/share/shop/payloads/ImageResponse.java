@@ -11,10 +11,12 @@ import share.shop.utils.ImageToUrl;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ImageResponse {
+
     private Long id;
     private String urlSmall;
     private String urlMedium;
     private int priority;
+    private Long shopId;
 
     public ImageResponse imageResponseConvert(Image image){
         ModelMapper modelMapper = new ModelMapper();

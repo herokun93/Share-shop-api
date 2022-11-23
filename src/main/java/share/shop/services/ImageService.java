@@ -32,14 +32,36 @@ public class ImageService {
     public Optional<Image>findById(Long id){
         return imageRepository.findById(id);
     }
+    public Optional<Image>findByShopIdAndId(Long shopId,Long imageId){
+        return imageRepository.findByShopIdAndId(shopId,imageId);
+    }
 
     public void deleteById(long id){
         imageRepository.deleteById(id);
     }
+    public Image saveAndFlush(Image image){return imageRepository.saveAndFlush(image);};
 
     public PagedResponse getAllImagesOfProduct(long countryId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Image> images = imageRepository.findAllByProductId(countryId,pageable);
+
+        if(images.getNumberOfElements() ==0){
+            return new PagedResponse(Collections.emptyList(),images.getNumber(),images.getSize(),
+                    images.getTotalElements(),images.getTotalPages(),images.isLast());
+        }
+
+        List<ImageResponse> imageResponseList = images.map(image -> {
+            ImageResponse imageResponse = new ImageResponse();
+            return imageResponse.imageResponseConvert(image);
+        }).getContent();
+
+        return new PagedResponse<>(imageResponseList,images.getNumber(),images.getSize(),images.getTotalElements(),
+                images.getTotalPages(),images.isLast());
+    }
+
+    public PagedResponse getAllImagesOfShop(long shopId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Image> images = imageRepository.findAllByShopId(shopId,pageable);
 
         if(images.getNumberOfElements() ==0){
             return new PagedResponse(Collections.emptyList(),images.getNumber(),images.getSize(),

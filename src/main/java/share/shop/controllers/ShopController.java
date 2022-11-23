@@ -2,26 +2,25 @@ package share.shop.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import share.shop.exceptions.ResourceNotFoundException;
-import share.shop.models.Role;
-import share.shop.models.RoleName;
-import share.shop.models.Shop;
-import share.shop.models.User;
-import share.shop.payloads.PagedResponse;
-import share.shop.payloads.ShopInfoRequest;
-import share.shop.payloads.ShopRegisterRequest;
+import share.shop.models.*;
+import share.shop.payloads.*;
 import share.shop.securities.UserLogged;
-import share.shop.services.ProductService;
-import share.shop.services.RoleService;
-import share.shop.services.ShopService;
-import share.shop.services.UserService;
+import share.shop.services.*;
 import share.shop.utils.AppConstants;
+import share.shop.utils.FileUploadUtil;
+import share.shop.utils.ImageToUrl;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -41,6 +40,9 @@ public class ShopController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private ImageService imageService;
 
     @ResponseBody
     @PostMapping(value = "/shops")
@@ -144,6 +146,122 @@ public class ShopController {
                 new ResourceNotFoundException("Shop","name",shopName));
 
         return productService.getAllProductsForShop(shop.getId(), page, size);
+    }
+
+    @PreAuthorize("hasRole('PARTNER')")
+    @PostMapping(value = "/shops/images",consumes = {"multipart/form-data"})
+    public ResponseEntity postImageByShopName(@ModelAttribute ShopImageRequest shopImageRequest) {
+
+        List<String> fileList = new ArrayList<>();
+
+        try {
+            UserLogged userLogged = new UserLogged();
+            String email = userLogged.getEmail();
+            User user = userService.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "Email", ""));
+
+            Shop shop = shopService.findByUserId(user.getId()).orElseThrow(()->new ResourceNotFoundException("Shop","id",user.getId()));
+
+            System.out.println("Shop name " + shop.getId());
+
+            MultipartFile[] files = shopImageRequest.getFiles();
+            if(files.length%2==1) return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+            List<Image> imageList = new ArrayList<>();
+
+            Image newImage = Image.builder()
+                    .shop(shop)
+                    .build();
+
+
+            for(int i = 0; i< shopImageRequest.getFiles().length; i++){
+
+                try {
+                    String fileExtension = StringUtils.getFilenameExtension(files[i].getOriginalFilename());
+                    String url = FileUploadUtil.saveFile(fileExtension,files[i],"/shops/"+shop.getId().toString());
+                    fileList.add(ImageToUrl.toUrl(url));
+                    newImage.setUrlSmall(url);
+
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                i = i+1;
+                try {
+                    String fileExtension = StringUtils.getFilenameExtension(files[i].getOriginalFilename());
+
+                    String url = FileUploadUtil.saveFile(fileExtension, files[i],"/shops/"+shop.getId().toString());
+                    fileList.add(ImageToUrl.toUrl(url));
+                    newImage.setUrlMedium(url);
+                    imageList.add(newImage);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            if(fileList.size()>0){
+                for(Image img :imageList){
+                    imageService.save(img);
+                }
+
+                ImageResponse imageResponse = new ImageResponse();
+
+                //return  ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(ErrorCode.CREATE_SUCCESS,fileList));
+                return new ResponseEntity(imageResponse.imageResponseConvert(newImage), HttpStatus.OK);
+            }
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.badRequest().build();
+
+    }
+
+    @PreAuthorize("hasRole('PARTNER')")
+    @PutMapping(value = "/shops/images/{id}")
+    public ResponseEntity putImageByShopName(
+            @Valid @PathVariable("id") Long imageId,
+            @RequestBody ImageSetProductRequest imageSetProductRequest)
+    {
+        Long productId = imageSetProductRequest.getProductId();
+        int priority = imageSetProductRequest.getPriority();
+
+        UserLogged userLogged = new UserLogged();
+        String email = userLogged.getEmail();
+        User user = userService.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "Email", ""));
+
+        Shop shop = shopService.findByUserId(user.getId()).orElseThrow(()->new ResourceNotFoundException("Shop","id",user.getId()));
+
+        Product product = productService.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product","id",productId));
+
+        long shopId = shop.getId();
+
+        Image imageGet = imageService.findByShopIdAndId(shopId,imageId).orElseThrow(()->
+                new ResourceNotFoundException("Image","Id",imageId));
+
+        imageGet.setProduct(product);
+        imageGet.setPriority(priority);
+
+        imageService.saveAndFlush(imageGet);
+
+        return ResponseEntity.ok(new ImageResponse().imageResponseConvert(imageGet));
+
+    }
+
+    @PreAuthorize("hasRole('PARTNER')")
+    @GetMapping(value = "/shops/images")
+    public PagedResponse getImageByShopName(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size)
+    {
+        UserLogged userLogged = new UserLogged();
+        String email = userLogged.getEmail();
+        User user = userService.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "Email", ""));
+
+        Shop shop = shopService.findByUserId(user.getId()).orElseThrow(()->new ResourceNotFoundException("Shop","id",user.getId()));
+
+        long idShop = shop.getId();
+
+        return imageService.getAllImagesOfShop(idShop,page,size);
+
     }
 }
 

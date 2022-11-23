@@ -13,17 +13,15 @@ import share.shop.models.Image;
 import share.shop.models.Product;
 import share.shop.models.Shop;
 import share.shop.models.User;
-import share.shop.payloads.ImagesRequest;
-import share.shop.payloads.PagedResponse;
+import share.shop.payloads.ImageResponse;
+import share.shop.payloads.ImagesProductRequest;
 import share.shop.securities.UserLogged;
 import share.shop.services.ImageService;
 import share.shop.services.ProductService;
 import share.shop.services.UserService;
-import share.shop.utils.AppConstants;
 import share.shop.utils.FileUploadUtil;
 import share.shop.utils.ImageToUrl;
 
-import javax.validation.constraints.Min;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -48,13 +46,13 @@ public class ImageController {
 
     @PostMapping(value= "/images",consumes = {"multipart/form-data"})
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
-    public ResponseEntity uploadImages(@ModelAttribute ImagesRequest imagesRequest) {
+    public ResponseEntity uploadImages(@ModelAttribute ImagesProductRequest imagesProductRequest) {
 
         List<String> fileList = new ArrayList<>();
-         int priority = imagesRequest.getPriority();
+         int priority = imagesProductRequest.getPriority();
 
         try {
-            long productId = imagesRequest.getProductId();
+            long productId = imagesProductRequest.getProductId();
             Optional<Product> product = productService.findById(productId);
 
             UserLogged userLogged = new UserLogged();
@@ -65,20 +63,23 @@ public class ImageController {
             Shop shop =user.getShop();
 
 
-            MultipartFile[] files = imagesRequest.getFiles();
+            MultipartFile[] files = imagesProductRequest.getFiles();
 
             if(files.length%2==1) return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
 
             List<Image> imageList = new ArrayList<>();
 
 
-            for(int i=0;i<imagesRequest.getFiles().length;i++){
+            Image newImage = Image.builder()
+                    .priority(priority)
+                    .product(product.get())
+                    .shop(shop)
+                    .build();
 
-                Image newImage = Image.builder()
-                        .priority(priority)
-                        .product(product.get())
-                        .shop(shop)
-                        .build();
+
+            for(int i = 0; i< imagesProductRequest.getFiles().length; i++){
+
+
 
                 try {
                     String fileExtension = StringUtils.getFilenameExtension(files[i].getOriginalFilename());
@@ -105,12 +106,14 @@ public class ImageController {
 
             }
 
+            ImageResponse imageResponse = new ImageResponse();
+
             if(fileList.size()>0){
                 for(Image img :imageList){
                     imageService.save(img);
                 }
                 //return  ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(ErrorCode.CREATE_SUCCESS,fileList));
-                return new ResponseEntity(fileList, HttpStatus.OK);
+                return new ResponseEntity(imageResponse.imageResponseConvert(newImage), HttpStatus.OK);
             }
 
         } catch (Exception e) {}

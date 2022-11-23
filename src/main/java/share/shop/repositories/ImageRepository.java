@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import share.shop.models.Image;
 import share.shop.models.Product;
 
+import java.util.Optional;
+
 @Repository
 public interface ImageRepository extends JpaRepository<Image,Long> {
 
@@ -17,5 +19,9 @@ public interface ImageRepository extends JpaRepository<Image,Long> {
     Image getImageByName(String name);
 
     Page<Image> findAllByProductId(Long id, Pageable pageable);
+    Page<Image> findAllByShopId(Long id, Pageable pageable);
+    Optional<Image>findByShopIdAndId(Long shopId,Long id);
+
+
 
 }
