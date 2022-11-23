@@ -25,7 +25,7 @@ public class CountryController {
     @Autowired
     private CountryService countryService;
 
-    @PostMapping(value = "/countries",consumes = {"multipart/form-data"})
+    @PostMapping(value = "/countries")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> postCountry(@Valid @RequestBody CountryRequest countryRequest) {
 
@@ -47,7 +47,7 @@ public class CountryController {
         return new ResponseEntity(countryResponse.countryConvert(country), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/countries/{id}",consumes = {"multipart/form-data"})
+    @PutMapping(value = "/countries/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> putCountry(
             @Valid  @PathVariable("id") @Min(0) Long countryId,

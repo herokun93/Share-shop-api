@@ -57,7 +57,7 @@ public class UserController {
     }
 
 
-    @PutMapping(value = "/users/info",consumes = {"multipart/form-data"})
+    @PutMapping(value = "/users/info")
     public ResponseEntity<?> putUserInfo(
             @Valid @RequestBody UserProfileUpdateRequest newUser) {
 
@@ -80,7 +80,7 @@ public class UserController {
     }
 
 
-    @PutMapping(value = "/users/pass",consumes = {"multipart/form-data"})
+    @PutMapping(value = "/users/pass")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> putUserPass(
 
@@ -111,7 +111,7 @@ public class UserController {
 
     }
 
-    @PutMapping(value = "/users/name",consumes = {"multipart/form-data"})
+    @PutMapping(value = "/users/name")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> putUserUserName(
             @Valid @RequestBody UserUpdateNameRequest newNameUser) {

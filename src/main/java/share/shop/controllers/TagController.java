@@ -24,7 +24,7 @@ public class TagController {
     @Autowired
     private TagService tagService;
 
-    @PostMapping(value = "/tags",consumes = {"multipart/form-data"})
+    @PostMapping(value = "/tags")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> postTag(@Valid @RequestBody TagRequest tagRequest) {
 
@@ -42,7 +42,7 @@ public class TagController {
         return new ResponseEntity(tagResponse.tagConvert(tag), HttpStatus.OK);
     }
 
-    @PutMapping(value = "/tags/{id}",consumes = {"multipart/form-data"})
+    @PutMapping(value = "/tags/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> putTag(
             @Valid  @PathVariable("id") @Min(0) Long tagId,
@@ -87,7 +87,7 @@ public class TagController {
         return tagService.getAllTags(page,size);
     }
 
-    @PostMapping(value="/tags/{id}/addProduct",consumes = {"multipart/form-data"})
+    @PostMapping(value="/tags/{id}/addProduct")
     public PagedResponse postTagForProduct(
             @Valid  @PathVariable("id") @Min(0) Long tagId,
             @Valid @RequestBody ProductIdRequest productIdRequest) {
