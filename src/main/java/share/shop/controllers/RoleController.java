@@ -15,6 +15,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -58,26 +59,19 @@ public class RoleController {
     public ResponseEntity deleteRoleForUser(
             @RequestBody  @Valid RoleUserRequest roleUserRequest){
         String email = roleUserRequest.getEmail();
-        String role = roleUserRequest.getRole();
-
-        Role roleEntity = roleService.findByName(RoleName.valueOf(role)).orElseThrow(()->
-                new ResourceNotFoundException("Role","name",role));
+        String roleName = roleUserRequest.getRole();
 
         User user = userService.findByEmail(email).orElseThrow(()->new ResourceNotFoundException("User","email",email));
 
+        Role role = roleService.findByName(RoleName.valueOf(roleName)).orElseThrow(()->
+                new ResourceNotFoundException("Role","name",roleName));
 
         if(user.getRoles().contains(role)){
 
-            System.out.println("Remove role");
-
-            Set<Role> roles = user.getRoles();
-            roles.remove(roleEntity);
-
-            user.setRoles(roles);
-
-            userService.saveAndFlush(user);
-            return ResponseEntity.ok(user.getRoles());
+            userService.removeRoleUser(user.getId(),role.getId());
+            return ResponseEntity.ok(null);
         }else {
+            System.out.println("Remove bad");
             return ResponseEntity.badRequest().build();
         }
     }

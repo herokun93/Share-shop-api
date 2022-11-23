@@ -23,6 +23,7 @@ public class Shop extends UserDateAudit {
     private String number;
     private String email;
     private String address;
+    private boolean active;
 
     @OneToMany(mappedBy = "shop",fetch = FetchType.LAZY)
     private Collection<Product> products;

@@ -36,14 +36,13 @@ public class UserService {
     public Optional<User> findById(Long id){
         return userRepository.findById(id);
     }
-    public Optional<User> findByEmail(String email){
-        return userRepository.findByEmail(email);
-    }
-
+    public Optional<User> findByEmail(String email){return userRepository.findByEmail(email);}
     public boolean existsByEmail(String email) {return  userRepository.existsByEmail(email);}
     public User save(User user){return  userRepository.save(user);}
 
     public User saveAndFlush(User user){return  userRepository.saveAndFlush(user);}
+
+    public void removeRoleUser(long userId,long roleId){roleRepository.removeRoleUser( userId, roleId);}
 
 
 
@@ -91,4 +90,6 @@ public class UserService {
 
         return true;
     }
+
+
 }

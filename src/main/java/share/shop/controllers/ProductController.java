@@ -42,6 +42,9 @@ public class ProductController {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private ShopService shopService;
+
     @GetMapping(value = "/products/{id}")
     public ResponseEntity getProduct(@PathVariable("id") @Min(0) long id){
         Optional<Product> product = productService.findById(id);
@@ -66,6 +69,7 @@ public class ProductController {
     @PostMapping(value="/products",consumes = {"multipart/form-data"})
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
     public ResponseEntity postProduct(@ModelAttribute ProductRequest productRequest){
+
         String  name = productRequest.getName();
         boolean hot = productRequest.isHot();
         int rating = productRequest.getRating();
@@ -75,6 +79,7 @@ public class ProductController {
         boolean enable = productRequest.isEnable();
         long countryId = productRequest.getCountryId();
         long subCategoryId = productRequest.getSubCategoryId();
+        long shopId = productRequest.getShopId();
 
 
 
@@ -84,6 +89,8 @@ public class ProductController {
 
         Country countryGet = countryService.findById(countryId)
                 .orElseThrow(()->new ResourceNotFoundException("Product","countryId",countryId));
+
+        Shop shopGet = shopService.findById(shopId).orElseThrow(()->new ResourceNotFoundException("Shop","id",shopId));
 
 
 //        List<String> fileList = new ArrayList<>();
@@ -116,6 +123,7 @@ public class ProductController {
                 .country(countryGet)
                 .subCategory(subCategoryGet)
                 .descriptionSort(descriptionSort)
+                .shop(shopGet)
                 .build();
 
 

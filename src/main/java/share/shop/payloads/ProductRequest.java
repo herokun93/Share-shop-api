@@ -48,6 +48,11 @@ public class ProductRequest {
     @NotBlank
     private Long subCategoryId;
 
+    @NotBlank
+    private Long shopId;
+
+
+
 //
 //    @NotBlank
 //    private MultipartFile[] files;

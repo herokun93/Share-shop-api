@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShopRequest {
+public class ShopRegisterRequest {
 
     @NotBlank
     private String name;
@@ -24,8 +24,11 @@ public class ShopRequest {
     private String email;
     @NotBlank
     private String address;
+
     @NotBlank
+    @Email
     private String userEmail;
-    @NotBlank
+
+
     private boolean active;
 }

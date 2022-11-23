@@ -102,7 +102,7 @@ public class AuthController {
         return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userProfile.userProfileConvert(userGet)));
     }
 
-    @PostMapping(value = "/register",consumes = {"multipart/form-data"})
+    @PostMapping(value = "/register")
     private ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         String email = registerRequest.getEmail();
         if (userService.existsByEmail(email)) {
