@@ -1,13 +1,11 @@
 package share.shop.payloads;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 @Getter
 @Setter
@@ -15,7 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductRequest {
+public class ProductEditRequest {
     @Size(min = 8,max=200,message = "Product name must be between 8 and 200 characters")
     @NotBlank(message = "Product name shouldn't be null")
     private String name;
@@ -48,7 +46,6 @@ public class ProductRequest {
     @NotBlank
     private Long subCategoryId;
 
-//
-//    @NotBlank
-//    private MultipartFile[] files;
+    @NotBlank
+    private Long productId;
 }

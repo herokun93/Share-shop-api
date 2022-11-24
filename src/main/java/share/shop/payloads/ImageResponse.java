@@ -5,6 +5,9 @@ import org.modelmapper.ModelMapper;
 import share.shop.models.Image;
 import share.shop.utils.ImageToUrl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Getter
 @Setter
@@ -26,5 +29,14 @@ public class ImageResponse {
 
         ImageResponse imageResponse = modelMapper.map(image,ImageResponse.class);
         return  imageResponse;
+    }
+    public List<ImageResponse> imagesResponseConvert(List<Image> images){
+
+        List<ImageResponse> imageResponseList = new ArrayList<>();
+
+        images.forEach(i->{
+            imageResponseList.add(imageResponseConvert(i));
+        });
+        return  imageResponseList;
     }
 }

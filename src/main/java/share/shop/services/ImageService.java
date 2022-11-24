@@ -32,14 +32,14 @@ public class ImageService {
     public Optional<Image>findById(Long id){
         return imageRepository.findById(id);
     }
-    public Optional<Image>findByShopIdAndId(Long shopId,Long imageId){
-        return imageRepository.findByShopIdAndId(shopId,imageId);
-    }
+    public Optional<Image>findByShopIdAndId(Long shopId,Long imageId){return imageRepository.findByShopIdAndId(shopId,imageId);}
+
 
     public void deleteById(long id){
         imageRepository.deleteById(id);
     }
     public Image saveAndFlush(Image image){return imageRepository.saveAndFlush(image);};
+    public List<Image> saveAll(List<Image> images){return imageRepository.saveAll(images);}
 
     public PagedResponse getAllImagesOfProduct(long countryId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

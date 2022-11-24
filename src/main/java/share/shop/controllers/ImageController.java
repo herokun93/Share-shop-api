@@ -44,81 +44,81 @@ public class ImageController {
     @Autowired
     private UserService userService;
 
-    @PostMapping(value= "/images",consumes = {"multipart/form-data"})
-    @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
-    public ResponseEntity uploadImages(@ModelAttribute ImagesProductRequest imagesProductRequest) {
-
-        List<String> fileList = new ArrayList<>();
-         int priority = imagesProductRequest.getPriority();
-
-        try {
-            long productId = imagesProductRequest.getProductId();
-            Optional<Product> product = productService.findById(productId);
-
-            UserLogged userLogged = new UserLogged();
-            String email = userLogged.getEmail();
-            User user = userService.findByEmail(email).orElseThrow(
-                    () -> new ResourceNotFoundException("User", "Email", ""));
-
-            Shop shop =user.getShop();
-
-
-            MultipartFile[] files = imagesProductRequest.getFiles();
-
-            if(files.length%2==1) return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-
-            List<Image> imageList = new ArrayList<>();
-
-
-            Image newImage = Image.builder()
-                    .priority(priority)
-                    .product(product.get())
-                    .shop(shop)
-                    .build();
-
-
-            for(int i = 0; i< imagesProductRequest.getFiles().length; i++){
-
-
-
-                try {
-                    String fileExtension = StringUtils.getFilenameExtension(files[i].getOriginalFilename());
-                    // String fileName = StringUtils.cleanPath(files[i].getOriginalFilename());
-                    String url = FileUploadUtil.saveFile(fileExtension, files[i],Long.toString(productId));
-                    fileList.add(ImageToUrl.toUrl(url));
-                    newImage.setUrlSmall(url);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                i = i+1;
-                try {
-                    String fileExtension = StringUtils.getFilenameExtension(files[i].getOriginalFilename());
-                    //String fileName = StringUtils.cleanPath(files[i].getOriginalFilename());
-
-                    String url = FileUploadUtil.saveFile(fileExtension, files[i],Long.toString(productId));
-                    fileList.add(ImageToUrl.toUrl(url));
-                    newImage.setUrlMedium(url);
-                    imageList.add(newImage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
-
-            }
-
-            ImageResponse imageResponse = new ImageResponse();
-
-            if(fileList.size()>0){
-                for(Image img :imageList){
-                    imageService.save(img);
-                }
-                //return  ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(ErrorCode.CREATE_SUCCESS,fileList));
-                return new ResponseEntity(imageResponse.imageResponseConvert(newImage), HttpStatus.OK);
-            }
-
-        } catch (Exception e) {}
-        return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-    }
+//    @PostMapping(value= "/images",consumes = {"multipart/form-data"})
+//    @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
+//    public ResponseEntity uploadImages(@ModelAttribute ImagesProductRequest imagesProductRequest) {
+//
+//        List<String> fileList = new ArrayList<>();
+//         int priority = imagesProductRequest.getPriority();
+//
+//        try {
+//            long productId = imagesProductRequest.getProductId();
+//            Optional<Product> product = productService.findById(productId);
+//
+//            UserLogged userLogged = new UserLogged();
+//            String email = userLogged.getEmail();
+//            User user = userService.findByEmail(email).orElseThrow(
+//                    () -> new ResourceNotFoundException("User", "Email", ""));
+//
+//            Shop shop =user.getShop();
+//
+//
+//            MultipartFile[] files = imagesProductRequest.getFiles();
+//
+//            if(files.length%2==1) return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+//
+//            List<Image> imageList = new ArrayList<>();
+//
+//
+//            Image newImage = Image.builder()
+//                    .priority(priority)
+//                    .product(product.get())
+//                    .shop(shop)
+//                    .build();
+//
+//
+//            for(int i = 0; i< imagesProductRequest.getFiles().length; i++){
+//
+//
+//
+//                try {
+//                    String fileExtension = StringUtils.getFilenameExtension(files[i].getOriginalFilename());
+//                    // String fileName = StringUtils.cleanPath(files[i].getOriginalFilename());
+//                    String url = FileUploadUtil.saveFile(fileExtension, files[i],Long.toString(productId));
+//                    fileList.add(ImageToUrl.toUrl(url));
+//                    newImage.setUrlSmall(url);
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//                i = i+1;
+//                try {
+//                    String fileExtension = StringUtils.getFilenameExtension(files[i].getOriginalFilename());
+//                    //String fileName = StringUtils.cleanPath(files[i].getOriginalFilename());
+//
+//                    String url = FileUploadUtil.saveFile(fileExtension, files[i],Long.toString(productId));
+//                    fileList.add(ImageToUrl.toUrl(url));
+//                    newImage.setUrlMedium(url);
+//                    imageList.add(newImage);
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//
+//
+//            }
+//
+//            ImageResponse imageResponse = new ImageResponse();
+//
+//            if(fileList.size()>0){
+//                for(Image img :imageList){
+//                    imageService.save(img);
+//                }
+//                //return  ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(ErrorCode.CREATE_SUCCESS,fileList));
+//                return new ResponseEntity(imageResponse.imageResponseConvert(newImage), HttpStatus.OK);
+//            }
+//
+//        } catch (Exception e) {}
+//        return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+//    }
 
     @GetMapping(value = "/images/{name}", produces = MediaType.IMAGE_PNG_VALUE)
     public @ResponseBody byte[] getFileByName(@PathVariable("name") String name) throws IOException {

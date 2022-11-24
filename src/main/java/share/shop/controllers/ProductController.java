@@ -1,5 +1,6 @@
 package share.shop.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,10 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.*;
-import share.shop.payloads.PagedResponse;
-import share.shop.payloads.ProductCard;
-import share.shop.payloads.ProductDetails;
-import share.shop.payloads.ProductRequest;
+import share.shop.payloads.*;
+import share.shop.securities.UserLogged;
 import share.shop.services.*;
 import share.shop.utils.AppConstants;
 import share.shop.utils.FileUploadUtil;
@@ -24,6 +23,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class ProductController {
 
     @Autowired
@@ -44,6 +44,9 @@ public class ProductController {
 
     @Autowired
     private ShopService shopService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping(value = "/products/{id}")
     public ResponseEntity getProduct(@PathVariable("id") @Min(0) long id){
@@ -66,9 +69,13 @@ public class ProductController {
     }
 
     @ResponseBody
-    @PostMapping(value="/products",consumes = {"multipart/form-data"})
-    @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
-    public ResponseEntity postProduct(@ModelAttribute ProductRequest productRequest){
+    @PostMapping(value="/products")
+    @PreAuthorize("hasRole('PARTNER')")
+    public ResponseEntity postProduct(@RequestBody ProductRequest productRequest){
+
+        UserLogged userLogged = new UserLogged();
+        String email = userLogged.getEmail();
+
 
         String  name = productRequest.getName();
         boolean hot = productRequest.isHot();
@@ -79,8 +86,6 @@ public class ProductController {
         boolean enable = productRequest.isEnable();
         long countryId = productRequest.getCountryId();
         long subCategoryId = productRequest.getSubCategoryId();
-        long shopId = productRequest.getShopId();
-
 
 
 
@@ -90,28 +95,9 @@ public class ProductController {
         Country countryGet = countryService.findById(countryId)
                 .orElseThrow(()->new ResourceNotFoundException("Product","countryId",countryId));
 
-        Shop shopGet = shopService.findById(shopId).orElseThrow(()->new ResourceNotFoundException("Shop","id",shopId));
+        User user = userService.findByEmail(email).orElseThrow(()->new ResourceNotFoundException("User","email",email));
 
-
-//        List<String> fileList = new ArrayList<>();
-//        MultipartFile[] files = productRequest.getFiles();
-//
-//
-//        String smallImageExtension;
-//        String mediumImageExtension;
-//        String smallImage;
-//        String mediumImage;
-//        String url ;
-//        if(files.length==2){
-//
-//            smallImageExtension = StringUtils.getFilenameExtension(files[0].getOriginalFilename());
-//            mediumImageExtension = StringUtils.getFilenameExtension(files[1].getOriginalFilename());
-//            smallImage =  StringUtils.cleanPath(files[0].getOriginalFilename());
-//            mediumImage =  StringUtils.cleanPath(files[1].getOriginalFilename());
-//
-//        }else{
-//            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-//        }
+        Shop shopGet = shopService.findById(user.getShop().getId()).orElseThrow(()->new ResourceNotFoundException("Shop","id",user.getShop().getId()));
 
         Product productNew = Product.builder()
                 .name(name)
@@ -133,31 +119,58 @@ public class ProductController {
 
         return new ResponseEntity(null, HttpStatus.OK);
 
+    }
 
-//        Image image = new Image();
-//
-//
-//        try {
-//            url = FileUploadUtil.saveFile(smallImageExtension, files[0],Long.toString(productNew.getId()));
-//            image.setUrlMedium(url);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        try {
-//            url = FileUploadUtil.saveFile(mediumImageExtension, files[1],Long.toString(productNew.getId()));
-//            image.setUrlSmall(url);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        image.setProduct(productNew);
-//        image.setPriority(1);
-//        imageService.save(image);
-//
-//        fileList.add(ImageToUrl.toUrl(smallImage));
-//        fileList.add(ImageToUrl.toUrl(mediumImage));
+    @ResponseBody
+    @PutMapping(value="/products")
+    @PreAuthorize("hasRole('PARTNER')")
+    public ResponseEntity putProduct(@RequestBody ProductEditRequest productEditRequest){
 
+        log.info("Update product");
+
+        String  name = productEditRequest.getName();
+        boolean hot = productEditRequest.isHot();
+        int rating = productEditRequest.getRating();
+        String description = productEditRequest.getDescription();
+        String descriptionSort = productEditRequest.getDescriptionSort();
+        String tiktok = productEditRequest.getTiktok();
+        boolean enable = productEditRequest.isEnable();
+        long countryId = productEditRequest.getCountryId();
+        long subCategoryId = productEditRequest.getSubCategoryId();
+        long productId = productEditRequest.getProductId();
+
+        UserLogged userLogged = new UserLogged();
+        String email = userLogged.getEmail();
+        User user = userService.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "Email", ""));
+
+        Shop shopGet = shopService.findByUserId(user.getId()).orElseThrow(()->new ResourceNotFoundException("Shop","id",user.getId()));
+
+        Product product = productService.findByShopIdAndId(shopGet.getId(),productId).orElseThrow(()->new ResourceNotFoundException("Product","id",productId));
+
+
+        SubCategory subCategoryGet = subCategoryService.findById(subCategoryId)
+                .orElseThrow(()->new ResourceNotFoundException("Product","subCategoryId",subCategoryId));
+
+        Country countryGet = countryService.findById(countryId)
+                .orElseThrow(()->new ResourceNotFoundException("Product","countryId",countryId));
+
+
+        product.setName(name);
+        product.setHot(hot);
+        product.setRating(rating);
+        product.setDescription(description);
+        product.setDescriptionSort(descriptionSort);
+        product.setTiktok(tiktok);
+        product.setEnable(enable);
+        product.setCountry(countryGet);
+        product.setSubCategory(subCategoryGet);
+
+
+        if(Objects.isNull(product))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+        productService.saveAndFlush(product);
+
+        return new ResponseEntity(null, HttpStatus.OK);
 
     }
 

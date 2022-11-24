@@ -24,9 +24,11 @@ public class ProductService {
     public Optional<Product> findById(Long id){
         return productRepository.findById(id);
     }
+    public Optional<Product>findByShopIdAndId(long shopId,long productId){return  productRepository.findByShopIdAndId(shopId, productId);}
     public Product save(Product product){return productRepository.save(product);};
 
     public Product saveAndFlush(Product product){return productRepository.saveAndFlush(product);};
+
 
     public PagedResponse getProducts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
@@ -70,6 +72,7 @@ public class ProductService {
 
     public PagedResponse getAllProductsForShop(Long shopId,int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
+
         Page<Product> products = productRepository.findAllByShopId(shopId,pageable);
 
         if(products.getNumberOfElements()==0){

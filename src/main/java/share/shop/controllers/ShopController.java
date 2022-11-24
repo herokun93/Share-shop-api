@@ -16,6 +16,7 @@ import share.shop.services.*;
 import share.shop.utils.AppConstants;
 import share.shop.utils.FileUploadUtil;
 import share.shop.utils.ImageToUrl;
+import share.shop.utils.ResizeImage;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -136,23 +137,21 @@ public class ShopController {
 
         return productService.getAllProductsForShop(shopId, page, size);
     }
-    @GetMapping(value = "/shops/{name}/products")
-    public PagedResponse getProductsShopName(
-            @Valid @PathVariable("name") String shopName,
-            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-
-        Shop shop = shopService.findByName(shopName).orElseThrow(()->
-                new ResourceNotFoundException("Shop","name",shopName));
-
-        return productService.getAllProductsForShop(shop.getId(), page, size);
-    }
+//    @GetMapping(value = "/shops/{name}/products")
+//    public PagedResponse getProductsShopName(
+//            @Valid @PathVariable("name") String shopName,
+//            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+//            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+//
+//        Shop shop = shopService.findByName(shopName).orElseThrow(()->
+//                new ResourceNotFoundException("Shop","name",shopName));
+//
+//        return productService.getAllProductsForShop(shop.getId(), page, size);
+//    }
 
     @PreAuthorize("hasRole('PARTNER')")
     @PostMapping(value = "/shops/images",consumes = {"multipart/form-data"})
     public ResponseEntity postImageByShopName(@ModelAttribute ShopImageRequest shopImageRequest) {
-
-        List<String> fileList = new ArrayList<>();
 
         try {
             UserLogged userLogged = new UserLogged();
@@ -163,55 +162,67 @@ public class ShopController {
 
             System.out.println("Shop name " + shop.getId());
 
-            MultipartFile[] files = shopImageRequest.getFiles();
-            if(files.length%2==1) return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-
-            List<Image> imageList = new ArrayList<>();
-
-            Image newImage = Image.builder()
-                    .shop(shop)
-                    .build();
+            List<Image> images = new ArrayList<>();
 
 
             for(int i = 0; i< shopImageRequest.getFiles().length; i++){
+                Image newImage = Image.builder()
+                        .shop(shop)
+                        .build();
 
-                try {
-                    String fileExtension = StringUtils.getFilenameExtension(files[i].getOriginalFilename());
-                    String url = FileUploadUtil.saveFile(fileExtension,files[i],"/shops/"+shop.getId().toString());
-                    fileList.add(ImageToUrl.toUrl(url));
-                    newImage.setUrlSmall(url);
-
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                i = i+1;
-                try {
-                    String fileExtension = StringUtils.getFilenameExtension(files[i].getOriginalFilename());
-
-                    String url = FileUploadUtil.saveFile(fileExtension, files[i],"/shops/"+shop.getId().toString());
-                    fileList.add(ImageToUrl.toUrl(url));
-                    newImage.setUrlMedium(url);
-                    imageList.add(newImage);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                String small = FileUploadUtil.resizeStart("/shops/"+shop.getId().toString(),shopImageRequest.getFiles()[i],400);
+                String medium = FileUploadUtil.resizeStart("/shops/"+shop.getId().toString(),shopImageRequest.getFiles()[i],900);
+                if(small !=null && medium!=null){
+                    newImage.setUrlSmall(small);
+                    newImage.setUrlMedium(medium);
+                    images.add(newImage);
                 }
             }
 
-            if(fileList.size()>0){
-                for(Image img :imageList){
-                    imageService.save(img);
-                }
+            images = imageService.saveAll(images);
+            if(images.size()==0) return   ResponseEntity.badRequest().build();
 
-                ImageResponse imageResponse = new ImageResponse();
+            return new ResponseEntity(new ImageResponse().imagesResponseConvert(images), HttpStatus.OK);
 
-                //return  ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(ErrorCode.CREATE_SUCCESS,fileList));
-                return new ResponseEntity(imageResponse.imageResponseConvert(newImage), HttpStatus.OK);
-            }
+//            for(int i = 0; i< shopImageRequest.getFiles().length; i++){
+//
+//                try {
+//                    String fileExtension = StringUtils.getFilenameExtension(files[i].getOriginalFilename());
+//                    String url = FileUploadUtil.saveFile(fileExtension,files[i],"/shops/"+shop.getId().toString());
+//                    String resizePath = FileUploadUtil.resizeStart("/shops/"+shop.getId().toString(),shopImageRequest.getFiles()[1],400);
+//                    System.out.println("resizePath: "+resizePath );
+//                    fileList.add(ImageToUrl.toUrl(url));
+//                    newImage.setUrlSmall(url);
+//
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//                i = i+1;
+//                try {
+//                    String fileExtension = StringUtils.getFilenameExtension(files[i].getOriginalFilename());
+//
+//                    String url = FileUploadUtil.saveFile(fileExtension, files[i],"/shops/"+shop.getId().toString());
+//                    fileList.add(ImageToUrl.toUrl(url));
+//                    newImage.setUrlMedium(url);
+//                    imageList.add(newImage);
+//                } catch (IOException e) {
+//                    throw new RuntimeException(e);
+//                }
+//            }
+//
+//            if(fileList.size()>0){
+//                for(Image img :imageList){
+//                    imageService.save(img);
+//                }
+//
+//                ImageResponse imageResponse = new ImageResponse();
+//                return new ResponseEntity(imageResponse.imageResponseConvert(newImage), HttpStatus.OK);
+//            }
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.badRequest().build();
+
 
     }
 
