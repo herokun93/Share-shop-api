@@ -48,6 +48,9 @@ public class ProductController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CommentService commentService;
+
     @GetMapping(value = "/products/{id}")
     public ResponseEntity getProduct(@PathVariable("id") @Min(0) long id){
         Optional<Product> product = productService.findById(id);
@@ -189,5 +192,13 @@ public class ProductController {
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return imageService.getAllImagesOfProduct(productId,page,size);
+    }
+
+    @GetMapping(value="/products/{id}/comments")
+    public PagedResponse getAllCommentByProductId(
+            @PathVariable("id") @Min(0) long productId,
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return commentService.getAllCommentsByProductId(productId,page,size);
     }
 }

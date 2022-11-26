@@ -1,5 +1,6 @@
 package share.shop.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import share.shop.payloads.ImagesProductRequest;
 import share.shop.securities.UserLogged;
 import share.shop.services.ImageService;
 import share.shop.services.ProductService;
+import share.shop.services.ShopService;
 import share.shop.services.UserService;
 import share.shop.utils.FileUploadUtil;
 import share.shop.utils.ImageToUrl;
@@ -33,6 +35,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class ImageController {
 
     @Autowired
@@ -43,6 +46,9 @@ public class ImageController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ShopService shopService;
 
 //    @PostMapping(value= "/images",consumes = {"multipart/form-data"})
 //    @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
@@ -123,37 +129,33 @@ public class ImageController {
     @GetMapping(value = "/images/{name}", produces = MediaType.IMAGE_PNG_VALUE)
     public @ResponseBody byte[] getFileByName(@PathVariable("name") String name) throws IOException {
         //  InputStream in = getClass().getResourceAsStream("/image/xyz.png");
-        name = "\\" +name;
+        name =  name;
         Image image = imageService.getImageByName(name);
+
         Path uploadPath;
         if(image.getUrlMedium().indexOf(name)>-1){
             uploadPath = Paths.get(image.getUrlMedium()) ;
         }else uploadPath = Paths.get(image.getUrlSmall()) ;
 
         InputStream out = Files.newInputStream(uploadPath);
+
         return out.readAllBytes();
     }
 
     @DeleteMapping(value= "/images/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
-    public ResponseEntity deleteImage(@PathVariable("id") Long id){
-        Optional<Image> imageGet = imageService.findById(id);
+    public ResponseEntity deleteImage(@PathVariable("id") Long imageId){
 
 
-
-        if(imageGet.isEmpty()){
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-        }
+        Image imageGet = imageService.findById(imageId)
+                .orElseThrow(()-> new ResourceNotFoundException("Image","id",imageId));
 
         UserLogged userLogged = new UserLogged();
 
-        if(imageGet.get().getId() == userLogged.getId()){
-            imageService.deleteById(id);
-            return new ResponseEntity(null, HttpStatus.OK);
-        }else{
-            return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-        }
+        shopService.findByUserId(userLogged.getId()).
+                orElseThrow(()->new ResourceNotFoundException("Shop","id",userLogged.getId()));
+
+        imageService.deleteById(imageId);
+        return new ResponseEntity(null, HttpStatus.OK);
     }
-
-
 }

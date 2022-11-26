@@ -75,7 +75,7 @@ public class FileUploadUtil {
 
             Path path = Paths.get(imageFolder,newFileName);
             File newImageFile = path.toFile();
-            ImageIO.write(outputImage, "jpg", newImageFile);
+            ImageIO.write(outputImage,FilenameUtils.getExtension(sourceFile.getName()), newImageFile);
             outputImage.flush();
             return newImageFile.toString();
         } catch (IOException e) {

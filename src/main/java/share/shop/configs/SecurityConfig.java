@@ -63,6 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/users/**",
                         "/api/products/**",
                         "/api/categories/**",
+                        "/api/comments/**",
                         "/api/tags/**",
                         "/api/shops/**",
                         "/api/countries/**",

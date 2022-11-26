@@ -20,6 +20,7 @@ public class ImageResponse {
     private String urlMedium;
     private int priority;
     private Long shopId;
+    private Long productId;
 
     public ImageResponse imageResponseConvert(Image image){
         ModelMapper modelMapper = new ModelMapper();

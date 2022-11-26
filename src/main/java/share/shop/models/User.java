@@ -58,8 +58,7 @@ public class User extends DateAudit {
     private String resetToken;
 
 
-//    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//    private Collection<Product> products;
+
 
 
 
@@ -102,6 +101,10 @@ public class User extends DateAudit {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="shop_id")
     private Shop shop;
+
+
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    private Collection<Comment> comments;
 
 
 

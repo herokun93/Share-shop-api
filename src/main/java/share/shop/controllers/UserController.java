@@ -12,6 +12,7 @@ import share.shop.payloads.*;
 import share.shop.securities.CurrentUser;
 import share.shop.securities.UserLogged;
 import share.shop.securities.UserPrincipal;
+import share.shop.services.CommentService;
 import share.shop.services.ProductService;
 import share.shop.services.UserService;
 import share.shop.utils.AppConstants;
@@ -32,6 +33,9 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private CommentService commentService;
+
     @GetMapping("/users/me")
     public UserProfile getCurrentUser(@CurrentUser UserPrincipal currentUser) {
         User user = userService.findByEmail(currentUser.getEmail())
@@ -42,11 +46,11 @@ public class UserController {
         return userProfile.userProfileConvert(user);
     }
 
-    @GetMapping("/users/checkEmailAvailability")
-    public UserIdentityAvailability checkEmailAvailability(@RequestParam(value = "email") String email) {
-        Boolean isAvailable = !userService.existsByEmail(email);
-        return new UserIdentityAvailability(isAvailable);
-    }
+//    @GetMapping("/users/checkEmailAvailability")
+//    public UserIdentityAvailability checkEmailAvailability(@RequestParam(value = "email") String email) {
+//        Boolean isAvailable = !userService.existsByEmail(email);
+//        return new UserIdentityAvailability(isAvailable);
+//    }
 
     @GetMapping(value="/users/{id}/shop")
     public PagedResponse getAllProductsForCreated(
@@ -56,28 +60,25 @@ public class UserController {
         return productService.getAllProductsForCreated(createdId,page,size);
     }
 
-
-    @PutMapping(value = "/users/info")
-    public ResponseEntity<?> putUserInfo(
-            @Valid @RequestBody UserProfileUpdateRequest newUser) {
-
-       // String name = categoryRequest.getName();
-
-//
-//        Category category = categoryService.findById(categoryId).orElseThrow(()-> {
-//            throw new ResourceNotFoundException("Category","id",categoryId);});
-//
-//        Optional<Category> categoryGet =categoryService.findByName(name);
-//
-//        if(!categoryGet.isEmpty())  return new ResponseEntity("Name is exist", HttpStatus.BAD_REQUEST);
-//
-//        category.setName(name);
-//        category = categoryService.save(category);
-//
-//        if(Objects.isNull(category))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-
-        return new ResponseEntity(null, HttpStatus.OK);
+    @GetMapping(value="/users/comments")
+    @PreAuthorize("hasRole('USER')")
+    public PagedResponse getAllCommentsByProductId(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        UserLogged userLogged = new UserLogged();
+        User user = userService.findByEmail(userLogged.getEmail()).orElseThrow(
+                ()-> new ResourceNotFoundException("User","email",userLogged.getEmail())
+        );
+        return commentService.findAllCommentsByUserId(user.getId(),page,size);
     }
+
+
+//    @PutMapping(value = "/users/info")
+//    public ResponseEntity<?> putUserInfo(
+//            @Valid @RequestBody UserProfileUpdateRequest newUser) {
+//
+//        return new ResponseEntity(null, HttpStatus.OK);
+//    }
 
 
     @PutMapping(value = "/users/pass")

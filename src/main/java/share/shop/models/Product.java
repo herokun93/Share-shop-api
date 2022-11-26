@@ -61,4 +61,7 @@ public class Product extends UserDateAudit {
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private Collection<Image> images;
 
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    private Collection<Comment> comments;
+
 }

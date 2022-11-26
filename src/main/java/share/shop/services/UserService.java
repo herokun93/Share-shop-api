@@ -74,7 +74,7 @@ public class UserService {
                 user.getEmail(),
                 "Thank you for signing up to heyShop, " +
                         "please click on the below url to activate your account : " +
-                        "http://localhost:2023/api/auth/verify/" + verificationToken));
+                        "http://18.183.112.143:2023/api/auth/verify/" + verificationToken));
 
         user = userRepository.save(user);
         return user;
