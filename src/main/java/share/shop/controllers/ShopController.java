@@ -65,7 +65,7 @@ public class ShopController {
 
 
         Shop shop = new Shop();
-        shop.setName(name);
+        shop.setName(name.trim());
         shop.setNumber(number);
         shop.setEmail(email);
         shop.setAddress(address);
@@ -113,7 +113,7 @@ public class ShopController {
 
 
         Shop shop = user.getShop();
-        shop.setName(name);
+        shop.setName(name.trim());
         shop.setNumber(number);
         shop.setEmail(emailShop);
         shop.setAddress(address);
@@ -130,24 +130,24 @@ public class ShopController {
 
 
     @GetMapping(value = "/shops/{id}/products")
-    public PagedResponse getProductsShop(
+    public PagedResponse getProductsByShopById(
             @Valid @PathVariable("id") Long shopId,
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
 
         return productService.getAllProductsForShop(shopId, page, size);
     }
-//    @GetMapping(value = "/shops/{name}/products")
-//    public PagedResponse getProductsShopName(
-//            @Valid @PathVariable("name") String shopName,
-//            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-//            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-//
-//        Shop shop = shopService.findByName(shopName).orElseThrow(()->
-//                new ResourceNotFoundException("Shop","name",shopName));
-//
-//        return productService.getAllProductsForShop(shop.getId(), page, size);
-//    }
+    @GetMapping(value = "/shops/{name}/listProducts")
+    public PagedResponse getProductsByShopName(
+            @Valid @PathVariable("name") String shopName,
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+
+        Shop shop = shopService.findByName(shopName).orElseThrow(()->
+                new ResourceNotFoundException("Shop","name",shopName));
+
+        return productService.getAllProductsForShop(shop.getId(), page, size);
+    }
 
     @PreAuthorize("hasRole('PARTNER')")
     @PostMapping(value = "/shops/images",consumes = {"multipart/form-data"})
@@ -273,6 +273,23 @@ public class ShopController {
 
         return imageService.getAllImagesOfShop(idShop,page,size);
 
+    }
+
+    @GetMapping(value = "/shops/{id}/information")
+    public ResponseEntity getShopInfoById(@Valid @PathVariable("id") Long shopId)
+    {
+        Shop shop = shopService.findById(shopId).orElseThrow(
+                ()->new ResourceNotFoundException("Shop","id",shopId));
+        ShopInfoResponse shopInfoResponse = new ShopInfoResponse();
+        return  ResponseEntity.ok(shopInfoResponse.shopInfoResponse(shop));
+    }
+
+    @GetMapping(value = "/shops/{name}/details")
+    public ResponseEntity getShopInfoByName(@Valid @PathVariable("name") String shopName)
+    {
+        Shop shop = shopService.findByName(shopName).orElseThrow(
+                ()->new ResourceNotFoundException("Shop","name",shopName));
+        return  ResponseEntity.ok(new ShopInfoResponse().shopInfoResponse(shop));
     }
 }
 
