@@ -28,6 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     CustomUserDetailsService customUserDetailsService;
 
+
+
     @Autowired
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
@@ -58,24 +60,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
                 .antMatchers("/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html",
                         "/**/*.css", "/**/*.js")
-                .permitAll().antMatchers(
-                        "/api/auth/**",
-                        "/api/users/**",
-                        "/api/products/**",
-                        "/api/categories/**",
-                        "/api/comments/**",
-                        "/api/tags/**",
-                        "/api/shops/**",
-                        "/api/countries/**",
-                        "/api/subCategories/**",
-                        "/api/images/**").permitAll()
+                .permitAll()
+                .antMatchers("/api/images/**").permitAll()
+                .antMatchers("/api/shops/**").permitAll()
+                .antMatchers("/api/countries/**").permitAll()
+                .antMatchers("/api/subCategories/**").permitAll()
+                .antMatchers("/api/tags/**").permitAll()
+                .antMatchers("/api/products/**").permitAll()
+                .antMatchers("/api/comments/**").permitAll()
+                .antMatchers("/api/categories/**").permitAll()
+                .antMatchers("/api/users/**").permitAll()
+                .antMatchers("/api/auth/**").permitAll()
+                .antMatchers("/api/telegram/**").permitAll()
                 .antMatchers("/api/user/checkEmailAvailability").permitAll()
                 .antMatchers( "/api/roles/**").hasRole("ADMIN")
                 .antMatchers( "/api/users/**").permitAll().anyRequest().authenticated();
 
         // Add our custom JWT security filter
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
     }
+
 
     @Override
     public void configure(WebSecurity web) throws Exception {

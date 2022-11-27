@@ -127,6 +127,13 @@
 			<version>2.9.0</version>
 		</dependency>
 
+		<!-- Telegram -->
+		<dependency>
+			<groupId>org.telegram</groupId>
+			<artifactId>telegrambots</artifactId>
+			<version>6.3.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

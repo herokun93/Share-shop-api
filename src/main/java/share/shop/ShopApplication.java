@@ -5,9 +5,11 @@ import com.github.javafaker.Faker;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.sql.init.SqlInitializationAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+
 
 
 @SpringBootApplication()
@@ -15,7 +17,16 @@ public class ShopApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ShopApplication.class, args);
+
+//		try {
+//			TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+//			botsApi.registerBot(new MyBotTelegram());
+//		} catch (TelegramApiException e) {
+//			e.printStackTrace();
+//		}
 	}
+
+
 
 	@Bean
 	public Hibernate5Module jsonHibernate5Module() {

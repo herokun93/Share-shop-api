@@ -24,8 +24,10 @@ public class ProductCard {
     private String descriptionSort;
     private String tiktok;
     private boolean enable;
+    private String countryName;
     private Long countryId;
     private Long subCategoryId;
+    private String subCategoryName;
     private List<ImageResponse> imageResponseList;
     private List<TagResponse> tagResponseList;
 

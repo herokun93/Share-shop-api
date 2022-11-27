@@ -15,4 +15,5 @@ public interface ShopRepository extends JpaRepository<Shop,Long> {
     Optional<Shop> findByName(String name);
     List<Shop> findByEmailOrName(String email, String name);
     Optional<Shop> findByEmailAndName(String email, String name);
+    Optional<Shop> findByTelegramId(String telegramId);
 }

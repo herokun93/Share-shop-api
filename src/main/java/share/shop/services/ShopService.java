@@ -17,6 +17,7 @@ public class ShopService {
     public Optional<Shop> findById(Long id){return shopRepository.findById(id);};
     public Optional<Shop> findByUserId(Long id){return shopRepository.findByUserId(id);};
     public Optional<Shop> findByName(String name){return shopRepository.findByName(name);};
+    public Optional<Shop> findByTelegramId(String telegramId){return  shopRepository.findByTelegramId(telegramId);}
     public Shop save(Shop shop){return  shopRepository.save(shop);}
     public Shop saveAndFlush(Shop shop){return  shopRepository.saveAndFlush(shop);}
     public List<Shop> findByEmailOrName(String email, String name){return  shopRepository.findByEmailOrName(email,name);}
