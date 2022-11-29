@@ -2,29 +2,25 @@ package share.shop.telegram;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.Message;
+
+
+import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.Shop;
-import share.shop.models.User;
 import share.shop.repositories.ShopRepository;
 import share.shop.repositories.UserRepository;
 
-import java.sql.Timestamp;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,7 +81,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
 
             if(messageText.contains("/shop")){
-                log.info("TelegramUserId {}",chatId);
                 Optional<Shop> shop = shopRepository.findByTelegramId(Long.toString(chatId));
                 if(shop.isEmpty())prepareAndSendMessage(chatId,"not is shop");
                 else{
@@ -94,6 +89,39 @@ public class TelegramBot extends TelegramLongPollingBot {
 
            
             }
+        }
+        else if (update.hasMessage() && update.getMessage().hasPhoto()) {
+            long chat_id = update.getMessage().getChatId();
+
+            // Array with photo objects with different sizes
+            // We will get the biggest photo from that array
+            List<PhotoSize> photos = update.getMessage().getPhoto();
+            // Know file_id
+            String f_id = photos.stream()
+                    .sorted(Comparator.comparing(PhotoSize::getFileSize).reversed())
+                    .findFirst()
+                    .orElse(null).getFileId();
+            // Know photo width
+            int f_width = photos.stream()
+                    .sorted(Comparator.comparing(PhotoSize::getFileSize).reversed())
+                    .findFirst()
+                    .orElse(null).getWidth();
+            // Know photo height
+            int f_height = photos.stream()
+                    .sorted(Comparator.comparing(PhotoSize::getFileSize).reversed())
+                    .findFirst()
+                    .orElse(null).getHeight();
+            // Set photo caption
+            String caption = "file_id: " + f_id + "\nwidth: " + Integer.toString(f_width) + "\nheight: " + Integer.toString(f_height);
+
+
+
+            //msg.setPhoto(update.getMessage().getPhoto().get(0).);
+
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(chat_id);
+            sendMessage.setText(caption);
+            executeMessage(sendMessage);
         }
     }
 

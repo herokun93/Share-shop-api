@@ -13,6 +13,7 @@ import share.shop.models.*;
 import share.shop.payloads.*;
 import share.shop.securities.UserLogged;
 import share.shop.services.*;
+import share.shop.telegram.TelegramClient;
 import share.shop.utils.AppConstants;
 import share.shop.utils.FileUploadUtil;
 import share.shop.utils.ImageToUrl;
@@ -51,8 +52,18 @@ public class ProductController {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private TelegramClient telegramClient;
+
     @GetMapping(value = "/products/{id}")
     public ResponseEntity getProduct(@PathVariable("id") @Min(0) long id){
+
+        try {
+            telegramClient.sendMessage("chao ae","5612057082");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         Optional<Product> product = productService.findById(id);
         ProductDetails productDetails = new ProductDetails();
         if(!product.isPresent()){
