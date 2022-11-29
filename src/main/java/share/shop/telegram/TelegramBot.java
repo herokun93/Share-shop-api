@@ -4,10 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
@@ -19,10 +22,14 @@ import share.shop.repositories.ShopRepository;
 import share.shop.repositories.UserRepository;
 
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.util.ResourceUtils.getFile;
 
 @Slf4j
 @Component
@@ -75,9 +82,12 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
 
+        log.info("data");
+        long chatId = update.getMessage().getChatId();
+
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
-            long chatId = update.getMessage().getChatId();
+
 
 
             if(messageText.contains("/shop")){
@@ -91,37 +101,35 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
         }
         else if (update.hasMessage() && update.getMessage().hasPhoto()) {
-            long chat_id = update.getMessage().getChatId();
 
-            // Array with photo objects with different sizes
-            // We will get the biggest photo from that array
-            List<PhotoSize> photos = update.getMessage().getPhoto();
-            // Know file_id
-            String f_id = photos.stream()
-                    .sorted(Comparator.comparing(PhotoSize::getFileSize).reversed())
-                    .findFirst()
-                    .orElse(null).getFileId();
-            // Know photo width
-            int f_width = photos.stream()
-                    .sorted(Comparator.comparing(PhotoSize::getFileSize).reversed())
-                    .findFirst()
-                    .orElse(null).getWidth();
-            // Know photo height
-            int f_height = photos.stream()
-                    .sorted(Comparator.comparing(PhotoSize::getFileSize).reversed())
-                    .findFirst()
-                    .orElse(null).getHeight();
-            // Set photo caption
-            String caption = "file_id: " + f_id + "\nwidth: " + Integer.toString(f_width) + "\nheight: " + Integer.toString(f_height);
+            Message message = update.getMessage();
 
+            // get the last photo - it seems to be the bigger one
+            List<PhotoSize> photos = message.getPhoto();
+            PhotoSize photo = photos.get(photos.size() - 1);
+            String id = photo.getFileId();
+            try {
+                GetFile getFile = new GetFile();
+                getFile.setFileId(id);
+                String filePath = execute(getFile).getFilePath();
+                log.info("id filed {}",id);
+                log.info("FilePath {}",filePath);
 
+                File file = downloadFile(filePath);
+                log.info("File out path {}",file.getPath());
 
-            //msg.setPhoto(update.getMessage().getPhoto().get(0).);
+                SendPhoto sendPhoto = new SendPhoto();
 
-            SendMessage sendMessage = new SendMessage();
-            sendMessage.setChatId(chat_id);
-            sendMessage.setText(caption);
-            executeMessage(sendMessage);
+              //  sendPhotoMessage(chatId, id, caption);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+        else if (update.hasMessage() && update.getMessage().hasVideo()) {
+            String fileId = update.getMessage().getVideo().getFileId();
+            GetFile getVide = new GetFile(fileId);
+            log.info("file video id {}",getVide);
         }
     }
 

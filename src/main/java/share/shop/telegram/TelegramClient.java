@@ -76,12 +76,31 @@ public class TelegramClient {
         }
     }
 
-    public void sendPhoto(Object chatID, String caption, String photo) throws Exception {
+    public void sendPhotoByPhotoId(Object chatID, String caption, String photo) throws Exception {
         try {
             RestTemplate restTemplate = new RestTemplate();
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl+"/sendPhoto")
                     .queryParam("chat_id", chatID)
                     .queryParam("photo", photo)
+                    .queryParam("caption", caption);
+            String exchange = restTemplate.postForObject(
+                    builder.toUriString().replaceAll("%20", " "),
+                    null,
+                    String.class);
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            log.error("Error response : State code: {}, response: {} ", e.getStatusCode(), e.getResponseBodyAsString());
+            throw e;
+        } catch (Exception err) {
+            log.error("Error: {} ", err.getMessage());
+            throw new Exception("This service is not available at the moment!");
+        }
+    }
+    public void sendVideoByVideoId(Object chatID, String caption, String video) throws Exception {
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl+"/sendVideo")
+                    .queryParam("chat_id", chatID)
+                    .queryParam("video", video)
                     .queryParam("caption", caption);
             String exchange = restTemplate.postForObject(
                     builder.toUriString().replaceAll("%20", " "),

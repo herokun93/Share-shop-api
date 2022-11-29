@@ -58,12 +58,6 @@ public class ProductController {
     @GetMapping(value = "/products/{id}")
     public ResponseEntity getProduct(@PathVariable("id") @Min(0) long id){
 
-        try {
-            telegramClient.sendMessage("chao ae","5612057082");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         Optional<Product> product = productService.findById(id);
         ProductDetails productDetails = new ProductDetails();
         if(!product.isPresent()){

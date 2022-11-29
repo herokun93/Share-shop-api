@@ -24,6 +24,7 @@ public class Shop extends UserDateAudit {
     private String email;
     private String address;
     private String telegramId;
+    private String telegramGroup;
     private boolean active;
 
     @OneToMany(mappedBy = "shop",fetch = FetchType.LAZY)

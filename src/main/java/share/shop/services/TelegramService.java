@@ -14,13 +14,16 @@ public class TelegramService {
     @Autowired
     TelegramClient telegramClient;
 
-    public void sendPhotoToTelegramGroup(String caption, String photo) throws Exception {
+    public void sendPhotoToTelegramGroup(String caption, String photo)  {
         List chatIdList = new ArrayList();
-        chatIdList.add("@MinoTest1");
-        chatIdList.add("@minoTestChannel");
+        chatIdList.add("@Rfd2Qpu3D9MwZDI1");
 
         for(Object chatId: chatIdList){
-            telegramClient.sendPhoto(chatId,caption, photo);
+            try {
+                telegramClient.sendPhotoByPhotoId(chatId,caption, photo);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -33,12 +36,30 @@ public class TelegramService {
         }
     }
 
-    public void sendMessageToTelegramGroup(String message) throws Exception {
+    public void sendMessageToTelegramGroup(String message)  {
         List chatIdList = new ArrayList();
-        chatIdList.add("@MinoTest1");
-        chatIdList.add("@minoTestChannel");
+        chatIdList.add("@myshopV1");
         for(Object chatId: chatIdList){
-            telegramClient.sendMessage(message, chatId);
+            try {
+                telegramClient.sendMessage(message, chatId);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+    public void sendPhotoByPhotoId(Object chatID, String caption, String photo){
+        try {
+            telegramClient.sendPhotoByPhotoId(chatID,caption,photo);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendVideoByVideoId(Object chatID, String caption, String video){
+        try {
+            telegramClient.sendVideoByVideoId(chatID,caption,video);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
