@@ -9,6 +9,7 @@ import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.Category;
 import share.shop.models.User;
 import share.shop.payloads.AuthRequest;
+import share.shop.payloads.CategoryAndSubResponse;
 import share.shop.payloads.CategoryRequest;
 import share.shop.payloads.PagedResponse;
 import share.shop.services.CategoryService;
@@ -78,12 +79,23 @@ public class CategoryController {
         return categoryService.getAllCategories(page,size);
     }
 
+
+
     @GetMapping(value="/categories/{id}/subCategory")
-    public PagedResponse getAllSubcategoryOfCategory(
+    public PagedResponse getAllSubcategoryOfACategory(
             @PathVariable("id") @Min(0) int categoryId,
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return categoryService.getAllSubCategoryOfCategory(categoryId,page,size);
     }
+
+//    @GetMapping(value="/categories/subCategory/{id}")
+//    public ResponseEntity<?> getAllSubcategoryOfCategory( @PathVariable("id") @Min(0) Long categoryId) {
+//        Category category = categoryService.findById(categoryId).orElseThrow(()->{
+//            throw new ResourceNotFoundException("category","id",categoryId);
+//        });
+//        CategoryAndSubResponse categoryAndSubResponse = new CategoryAndSubResponse();
+//        return new ResponseEntity<>(categoryAndSubResponse.categoryConvert(category),HttpStatus.OK);
+//    }
 
 }

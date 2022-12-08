@@ -28,6 +28,8 @@ public class ProductCard {
     private Long countryId;
     private Long subCategoryId;
     private String subCategoryName;
+    private int option;
+    private int featured;
     private List<ImageResponse> imageResponseList;
     private List<TagResponse> tagResponseList;
 

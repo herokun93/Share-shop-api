@@ -27,12 +27,33 @@ public class ProductService {
     public Optional<Product>findByShopIdAndId(long shopId,long productId){return  productRepository.findByShopIdAndId(shopId, productId);}
     public Product save(Product product){return productRepository.save(product);};
 
+
     public Product saveAndFlush(Product product){return productRepository.saveAndFlush(product);};
 
 
     public PagedResponse getProducts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.Direction.DESC, "createdAt");
         Page<Product> products = productRepository.findAll(pageable);
+
+        if(products.getNumberOfElements()==0){
+            return new PagedResponse<>(Collections.emptyList(), products.getNumber(), products.getSize(),
+                    products.getTotalElements(), products.getTotalPages(), products.isLast());
+        }
+
+
+
+        List<ProductCard> productCardListPage = products.map(product -> {
+            ProductCard productCard = new ProductCard();
+            return  productCard.productCardConvert(product);
+        }).getContent();
+
+        return new PagedResponse<>(productCardListPage, products.getNumber(), products.getSize(), products.getTotalElements(),
+                products.getTotalPages(), products.isLast());
+    }
+
+    public PagedResponse getAllProductsForFeatured(int feature,int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Product> products = productRepository.findAllByFeatured(feature,pageable);
 
         if(products.getNumberOfElements()==0){
             return new PagedResponse<>(Collections.emptyList(), products.getNumber(), products.getSize(),

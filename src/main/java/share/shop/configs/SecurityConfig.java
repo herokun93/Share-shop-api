@@ -72,6 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/users/**").permitAll()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/telegram/**").permitAll()
+                .antMatchers("/api/init/**").permitAll()
                 .antMatchers("/api/user/checkEmailAvailability").permitAll()
                 .antMatchers( "/api/roles/**").hasRole("ADMIN")
                 .antMatchers( "/api/users/**").permitAll().anyRequest().authenticated();

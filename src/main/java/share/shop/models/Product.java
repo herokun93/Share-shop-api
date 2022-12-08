@@ -22,6 +22,8 @@ public class Product extends UserDateAudit {
     private String descriptionSort;
     private String tiktok;
     private boolean enable;
+    private int featured;
+
 
     public Product(String name, boolean hot, int rating, String description, String descriptionSort, String tiktok, boolean enable) {
         this.name = name;
@@ -31,6 +33,7 @@ public class Product extends UserDateAudit {
         this.descriptionSort = descriptionSort;
         this.tiktok = tiktok;
         this.enable = enable;
+
     }
 
     //

@@ -28,6 +28,7 @@ public class ProductDetails extends UserDateAuditResponse {
     private boolean enable;
     private Long countryId;
     private Long subCategoryId;
+    private int option;
     private List<ImageResponse> imageResponseList;
     private List<TagResponse> tagResponseList;
 

@@ -189,6 +189,14 @@ public class ProductController {
         return productService.getProducts(page,size);
     }
 
+    @GetMapping(value="/products/featured")
+    public PagedResponse getFeaturedProducts(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
+            @RequestParam(value = "featured", defaultValue = AppConstants.DEFAULT_PRODUCT_FEATURED_SIZE) int featured) {
+        return productService.getAllProductsForFeatured(featured,page,size);
+    }
+
 
 
     @GetMapping(value="/products/{id}/images")
