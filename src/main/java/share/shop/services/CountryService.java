@@ -5,11 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import share.shop.models.Category;
 import share.shop.models.Country;
 import share.shop.models.Product;
-import share.shop.models.SubCategory;
-import share.shop.payloads.*;
+import share.shop.payloads.response.CountryResponse;
+import share.shop.payloads.response.PagedResponse;
+import share.shop.payloads.response.ProductCardResponse;
 import share.shop.repositories.CountryRepository;
 import share.shop.repositories.ProductRepository;
 
@@ -59,12 +59,12 @@ public class CountryService {
                     products.getTotalElements(),products.getTotalPages(),products.isLast());
         }
 
-        List<ProductCard> productCardList = products.map(subCategory -> {
-            ProductCard productCard = new ProductCard();
-            return productCard.productCardConvert(subCategory);
+        List<ProductCardResponse> productCardResponseList = products.map(subCategory -> {
+            ProductCardResponse productCardResponse = new ProductCardResponse();
+            return productCardResponse.productCardConvert(subCategory);
         }).getContent();
 
-        return new PagedResponse<>(productCardList,products.getNumber(),products.getSize(),products.getTotalElements(),
+        return new PagedResponse<>(productCardResponseList,products.getNumber(),products.getSize(),products.getTotalElements(),
                 products.getTotalPages(),products.isLast());
     }
 }

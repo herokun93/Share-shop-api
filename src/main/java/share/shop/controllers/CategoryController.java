@@ -7,11 +7,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.Category;
-import share.shop.models.User;
-import share.shop.payloads.AuthRequest;
-import share.shop.payloads.CategoryAndSubResponse;
-import share.shop.payloads.CategoryRequest;
-import share.shop.payloads.PagedResponse;
+import share.shop.payloads.request.CategoryRequest;
+import share.shop.payloads.response.PagedResponse;
 import share.shop.services.CategoryService;
 import share.shop.utils.AppConstants;
 

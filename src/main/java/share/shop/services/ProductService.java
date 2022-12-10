@@ -7,8 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import share.shop.models.Product;
-import share.shop.payloads.PagedResponse;
-import share.shop.payloads.ProductCard;
+import share.shop.payloads.response.PagedResponse;
+import share.shop.payloads.response.ProductCardResponse;
 import share.shop.repositories.ProductRepository;
 
 import java.util.Collections;
@@ -42,12 +42,12 @@ public class ProductService {
 
 
 
-        List<ProductCard> productCardListPage = products.map(product -> {
-            ProductCard productCard = new ProductCard();
-            return  productCard.productCardConvert(product);
+        List<ProductCardResponse> productCardResponseListPage = products.map(product -> {
+            ProductCardResponse productCardResponse = new ProductCardResponse();
+            return  productCardResponse.productCardConvert(product);
         }).getContent();
 
-        return new PagedResponse<>(productCardListPage, products.getNumber(), products.getSize(), products.getTotalElements(),
+        return new PagedResponse<>(productCardResponseListPage, products.getNumber(), products.getSize(), products.getTotalElements(),
                 products.getTotalPages(), products.isLast());
     }
 
@@ -62,12 +62,12 @@ public class ProductService {
 
 
 
-        List<ProductCard> productCardListPage = products.map(product -> {
-            ProductCard productCard = new ProductCard();
-            return  productCard.productCardConvert(product);
+        List<ProductCardResponse> productCardResponseListPage = products.map(product -> {
+            ProductCardResponse productCardResponse = new ProductCardResponse();
+            return  productCardResponse.productCardConvert(product);
         }).getContent();
 
-        return new PagedResponse<>(productCardListPage, products.getNumber(), products.getSize(), products.getTotalElements(),
+        return new PagedResponse<>(productCardResponseListPage, products.getNumber(), products.getSize(), products.getTotalElements(),
                 products.getTotalPages(), products.isLast());
     }
 
@@ -82,12 +82,12 @@ public class ProductService {
 
 
 
-        List<ProductCard> productCardListPage = products.map(product -> {
-            ProductCard productCard = new ProductCard();
-            return  productCard.productCardConvert(product);
+        List<ProductCardResponse> productCardResponseListPage = products.map(product -> {
+            ProductCardResponse productCardResponse = new ProductCardResponse();
+            return  productCardResponse.productCardConvert(product);
         }).getContent();
 
-        return new PagedResponse<>(productCardListPage, products.getNumber(), products.getSize(), products.getTotalElements(),
+        return new PagedResponse<>(productCardResponseListPage, products.getNumber(), products.getSize(), products.getTotalElements(),
                 products.getTotalPages(), products.isLast());
     }
 
@@ -103,12 +103,12 @@ public class ProductService {
 
 
 
-        List<ProductCard> productCardListPage = products.map(product -> {
-            ProductCard productCard = new ProductCard();
-            return  productCard.productCardConvert(product);
+        List<ProductCardResponse> productCardResponseListPage = products.map(product -> {
+            ProductCardResponse productCardResponse = new ProductCardResponse();
+            return  productCardResponse.productCardConvert(product);
         }).getContent();
 
-        return new PagedResponse<>(productCardListPage, products.getNumber(), products.getSize(), products.getTotalElements(),
+        return new PagedResponse<>(productCardResponseListPage, products.getNumber(), products.getSize(), products.getTotalElements(),
                 products.getTotalPages(), products.isLast());
     }
 

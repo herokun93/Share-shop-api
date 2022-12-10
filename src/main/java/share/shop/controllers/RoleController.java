@@ -7,16 +7,12 @@ import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.Role;
 import share.shop.models.RoleName;
 import share.shop.models.User;
-import share.shop.payloads.RoleUserRequest;
+import share.shop.payloads.request.RoleUserRequest;
 import share.shop.services.RoleService;
 import share.shop.services.UserService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api")

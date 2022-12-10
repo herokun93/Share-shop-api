@@ -8,7 +8,7 @@ import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.Comment;
 import share.shop.models.Product;
 import share.shop.models.User;
-import share.shop.payloads.CommentNewRequest;
+import share.shop.payloads.request.CommentNewRequest;
 import share.shop.securities.UserLogged;
 import share.shop.services.CommentService;
 import share.shop.services.ProductService;

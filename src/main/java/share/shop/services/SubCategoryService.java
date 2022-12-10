@@ -8,9 +8,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import share.shop.models.Product;
 import share.shop.models.SubCategory;
-import share.shop.payloads.PagedResponse;
-import share.shop.payloads.ProductCard;
-import share.shop.payloads.SubCategoryResponse;
+import share.shop.payloads.response.PagedResponse;
+import share.shop.payloads.response.ProductCardResponse;
+import share.shop.payloads.response.SubCategoryResponse;
 import share.shop.repositories.ProductRepository;
 import share.shop.repositories.SubCategoryRepository;
 
@@ -62,12 +62,12 @@ public class SubCategoryService {
                     products.getTotalElements(),products.getTotalPages(),products.isLast());
         }
 
-        List<ProductCard> productCardList = products.map(product -> {
-            ProductCard productCard = new ProductCard();
-            return productCard.productCardConvert(product);
+        List<ProductCardResponse> productCardResponseList = products.map(product -> {
+            ProductCardResponse productCardResponse = new ProductCardResponse();
+            return productCardResponse.productCardConvert(product);
         }).getContent();
 
-        return new PagedResponse<>(productCardList,products.getNumber(),products.getSize(),products.getTotalElements(),
+        return new PagedResponse<>(productCardResponseList,products.getNumber(),products.getSize(),products.getTotalElements(),
                 products.getTotalPages(),products.isLast());
     }
 

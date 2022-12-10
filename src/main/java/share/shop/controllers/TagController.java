@@ -5,10 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import share.shop.exceptions.AppException;
 import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.Tag;
-import share.shop.payloads.*;
+import share.shop.payloads.request.ProductIdRequest;
+import share.shop.payloads.request.TagRequest;
+import share.shop.payloads.response.PagedResponse;
+import share.shop.payloads.response.TagResponse;
 import share.shop.services.TagService;
 import share.shop.utils.AppConstants;
 

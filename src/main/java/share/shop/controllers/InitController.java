@@ -1,20 +1,11 @@
 package share.shop.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import share.shop.models.Product;
-import share.shop.payloads.ProductCard;
-import share.shop.services.CategoryService;
 import share.shop.services.InitService;
-import share.shop.services.ProductService;
-
-import javax.validation.constraints.Min;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")

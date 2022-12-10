@@ -6,32 +6,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.Image;
-import share.shop.models.Product;
-import share.shop.models.Shop;
-import share.shop.models.User;
-import share.shop.payloads.ImageResponse;
-import share.shop.payloads.ImagesProductRequest;
 import share.shop.securities.UserLogged;
 import share.shop.services.ImageService;
 import share.shop.services.ProductService;
 import share.shop.services.ShopService;
 import share.shop.services.UserService;
-import share.shop.utils.FileUploadUtil;
-import share.shop.utils.ImageToUrl;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")

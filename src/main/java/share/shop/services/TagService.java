@@ -5,11 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import share.shop.models.Category;
 import share.shop.models.Tag;
-import share.shop.payloads.CategoryResponse;
-import share.shop.payloads.PagedResponse;
-import share.shop.payloads.TagResponse;
+import share.shop.payloads.response.PagedResponse;
+import share.shop.payloads.response.TagResponse;
 import share.shop.repositories.TagRepository;
 
 import java.util.Collections;

@@ -6,10 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import share.shop.models.Image;
-import share.shop.models.Product;
-import share.shop.payloads.ImageResponse;
-import share.shop.payloads.PagedResponse;
-import share.shop.payloads.ProductCard;
+import share.shop.payloads.response.ImageResponse;
+import share.shop.payloads.response.PagedResponse;
 import share.shop.repositories.ImageRepository;
 
 import java.util.Collections;

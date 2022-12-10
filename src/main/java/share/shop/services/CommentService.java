@@ -7,10 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import share.shop.models.Comment;
-import share.shop.models.Product;
-import share.shop.payloads.CommentResponse;
-import share.shop.payloads.PagedResponse;
-import share.shop.payloads.ProductCard;
+import share.shop.payloads.response.CommentResponse;
+import share.shop.payloads.response.PagedResponse;
 import share.shop.repositories.CommentRepository;
 
 import java.util.Collections;

@@ -5,21 +5,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.*;
-import share.shop.payloads.*;
+import share.shop.payloads.request.ProductEditRequest;
+import share.shop.payloads.request.ProductRequest;
+import share.shop.payloads.response.PagedResponse;
+import share.shop.payloads.response.ProductCardResponse;
+import share.shop.payloads.response.ProductDetailsResponse;
 import share.shop.securities.UserLogged;
 import share.shop.services.*;
 import share.shop.telegram.TelegramClient;
 import share.shop.utils.AppConstants;
-import share.shop.utils.FileUploadUtil;
-import share.shop.utils.ImageToUrl;
 
 import javax.validation.constraints.Min;
-import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -59,21 +58,21 @@ public class ProductController {
     public ResponseEntity getProduct(@PathVariable("id") @Min(0) long id){
 
         Optional<Product> product = productService.findById(id);
-        ProductDetails productDetails = new ProductDetails();
+        ProductDetailsResponse productDetailsResponse = new ProductDetailsResponse();
         if(!product.isPresent()){
             new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
-        return  new ResponseEntity(productDetails.productDetailsConvert(product.get()), HttpStatus.OK);
+        return  new ResponseEntity(productDetailsResponse.productDetailsConvert(product.get()), HttpStatus.OK);
     }
 
     @GetMapping(value = "/products/{id}/card")
     public ResponseEntity getProductCard(@PathVariable("id") @Min(0) long id){
         Optional<Product> product = productService.findById(id);
-        ProductCard productCard = new ProductCard();
+        ProductCardResponse productCardResponse = new ProductCardResponse();
         if(!product.isPresent()){
             new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
-        return  new ResponseEntity(productCard.productCardConvert(product.get()), HttpStatus.OK);
+        return  new ResponseEntity(productCardResponse.productCardConvert(product.get()), HttpStatus.OK);
     }
 
     @ResponseBody

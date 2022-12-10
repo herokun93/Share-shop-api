@@ -6,10 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import share.shop.exceptions.ResourceNotFoundException;
-import share.shop.models.Category;
 import share.shop.models.Country;
-import share.shop.payloads.*;
 ;
+import share.shop.payloads.request.CountryRequest;
+import share.shop.payloads.response.ApiResponse;
+import share.shop.payloads.response.CountryResponse;
+import share.shop.payloads.response.PagedResponse;
 import share.shop.services.CountryService;
 import share.shop.utils.AppConstants;
 

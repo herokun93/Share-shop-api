@@ -9,7 +9,7 @@ public class ImageToUrl {
 
         log.info("PathUrl " + pathUrl);
 
-        String link= "http://18.183.112.143:2023/api/images/";
+        String link= "http://localhost:2023/api/images/";
         String newPath  = pathUrl.replace("\\","/");
         String[] folder = newPath.split("/");
         if(folder.length>1)link = link + folder[folder.length-1];

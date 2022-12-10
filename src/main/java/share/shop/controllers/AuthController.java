@@ -7,22 +7,18 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import share.shop.exceptions.AppException;
 import share.shop.exceptions.ResourceNotFoundException;
-import share.shop.models.Role;
-import share.shop.models.RoleName;
 import share.shop.models.User;
-import share.shop.payloads.*;
-import share.shop.repositories.RoleRepository;
-import share.shop.repositories.UserRepository;
+import share.shop.payloads.request.AuthRequest;
+import share.shop.payloads.request.RegisterRequest;
+import share.shop.payloads.request.UserProfile;
+import share.shop.payloads.response.ApiResponse;
+import share.shop.payloads.response.JwtAuthenticationResponse;
 import share.shop.securities.JwtTokenProvider;
 import share.shop.services.UserService;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
