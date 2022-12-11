@@ -4,6 +4,7 @@ import lombok.*;
 import share.shop.models.audit.UserDateAudit;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Entity
@@ -23,6 +24,10 @@ public class Product extends UserDateAudit {
     private String tiktok;
     private boolean enable;
     private int featured;
+    private LocalDateTime until;
+    private boolean sale;
+    private long price;
+    private long sale_price;
 
 
     public Product(String name, boolean hot, int rating, String description, String descriptionSort, String tiktok, boolean enable) {

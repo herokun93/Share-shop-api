@@ -72,6 +72,24 @@ public class CategoryService {
                 subCategories.getTotalPages(),subCategories.isLast());
     }
 
+    public PagedResponse getAllSubCategoryOfCategoryBySelect(String search,int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<SubCategory> subCategories = subCategoryRepository.findAllByCategorySearch(search,pageable);
+
+        if(subCategories.getNumberOfElements() ==0){
+            return new PagedResponse(Collections.emptyList(),subCategories.getNumber(),subCategories.getSize(),
+                    subCategories.getTotalElements(),subCategories.getTotalPages(),subCategories.isLast());
+        }
+
+        List<SubCategoryResponse> subCategoryResponses = subCategories.map(subCategory -> {
+            SubCategoryResponse subCategoryResponse = new SubCategoryResponse();
+            return subCategoryResponse.subCategoryConvert(subCategory);
+        }).getContent();
+
+        return new PagedResponse<>(subCategoryResponses,subCategories.getNumber(),subCategories.getSize(),subCategories.getTotalElements(),
+                subCategories.getTotalPages(),subCategories.isLast());
+    }
+
 
 
 

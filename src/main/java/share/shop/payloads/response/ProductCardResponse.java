@@ -6,6 +6,7 @@ import share.shop.models.Image;
 import share.shop.models.Product;
 import share.shop.models.Tag;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -24,8 +25,13 @@ public class ProductCardResponse {
     private String descriptionSort;
     private String countryName;
     private String subCategoryName;
+    private Long subCategoryId;
     private int option;
     private int featured;
+    private boolean sale;
+    private long price;
+    private long sale_price;
+    private LocalDateTime until;
     private List<ImageResponse> imageResponseList;
     private List<TagResponse> tagResponseList;
 

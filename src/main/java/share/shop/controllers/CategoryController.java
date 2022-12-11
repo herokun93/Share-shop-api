@@ -14,6 +14,7 @@ import share.shop.utils.AppConstants;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -85,6 +86,15 @@ public class CategoryController {
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return categoryService.getAllSubCategoryOfCategory(categoryId,page,size);
     }
+
+    @GetMapping(value="/categories/{search}/subCate")
+    public PagedResponse getAllSubcategoryOfACategoryBySearch(
+            @PathVariable("search") @NotBlank String search,
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        return categoryService.getAllSubCategoryOfCategoryBySelect(search,page,size);
+    }
+
 
 //    @GetMapping(value="/categories/subCategory/{id}")
 //    public ResponseEntity<?> getAllSubcategoryOfCategory( @PathVariable("id") @Min(0) Long categoryId) {

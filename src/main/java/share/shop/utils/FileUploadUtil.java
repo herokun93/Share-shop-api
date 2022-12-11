@@ -42,7 +42,7 @@ public class FileUploadUtil {
         return filePath.toString();
     }
 
-    public static String resizeStart(String subFolder,MultipartFile imageFile,Integer imageSize){
+    public static String resizeStart(String subFolder,MultipartFile imageFile,Integer imageHSize,Integer imageWSize){
         Path uploadPath = Paths.get("Files-Upload/"+subFolder) ;
 
         if (!Files.exists(uploadPath)) {
@@ -65,12 +65,13 @@ public class FileUploadUtil {
         File sourceFile = pathFile.toFile();
         try {
             BufferedImage bufferedImage = ImageIO.read(sourceFile);
-            BufferedImage outputImage = Scalr.resize(bufferedImage, imageSize);
+            BufferedImage outputImage = Scalr.resize(bufferedImage, imageHSize,imageWSize);
 
             String fileCode = RandomStringUtils.randomAlphanumeric(8);
 
             String newFileName = FilenameUtils.getBaseName(fileCode)
-                    + "_" + imageSize.toString()
+                    + "_" + imageHSize.toString()
+                    + "_" + imageWSize.toString()
                     + "." + FilenameUtils.getExtension(sourceFile.getName());
 
             Path path = Paths.get(imageFolder,newFileName);

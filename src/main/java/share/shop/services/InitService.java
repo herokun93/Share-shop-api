@@ -17,7 +17,7 @@ public class InitService {
 
 
         InitResponse initResponse = InitResponse.builder()
-                .categorises(categoryService.getAllCategories(0,10).getContent())
+                .categories(categoryService.getAllCategories(0,10).getContent())
                 .features(productService.getAllProductsForFeatured(1,0,20).getContent())
                 .products(productService.getAllProductsForShop(Long.valueOf(1),0,20).getContent())
                 .build();

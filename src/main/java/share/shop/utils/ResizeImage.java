@@ -25,14 +25,16 @@ public class ResizeImage {
 
     private String imageFolder="C:\\Users\\jsys04\\Documents\\GitHub\\Share-shop-api\\Files-Upload\\shops\\1";
 
-    private Integer imageSize =400;
+    private Integer imageHSize =300;
+    private Integer imageWSize =300;
 
     public boolean  resizeStart(File sourceFile){
         try {
             BufferedImage bufferedImage = ImageIO.read(sourceFile);
-            BufferedImage outputImage = Scalr.resize(bufferedImage, imageSize);
+            BufferedImage outputImage = Scalr.resize(bufferedImage, imageHSize,imageWSize);
             String newFileName = FilenameUtils.getBaseName(sourceFile.getName())
-                    + "_" + imageSize.toString()
+                    + "_" + imageHSize.toString()
+                    + "_" + imageWSize.toString()
                     + "." + FilenameUtils.getExtension(sourceFile.getName());
             Path path = Paths.get(imageFolder,newFileName);
             File newImageFile = path.toFile();

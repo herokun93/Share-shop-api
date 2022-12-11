@@ -7,6 +7,7 @@ import share.shop.models.Product;
 import share.shop.models.Tag;
 import share.shop.payloads.audit.UserDateAuditResponse;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -29,6 +30,11 @@ public class ProductDetailsResponse extends UserDateAuditResponse {
     private Long countryId;
     private Long subCategoryId;
     private int option;
+    private int featured;
+    private boolean sale;
+    private long price;
+    private long sale_price;
+    private LocalDateTime until;
     private List<ImageResponse> imageResponseList;
     private List<TagResponse> tagResponseList;
 

@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @Builder
 public class InitResponse {
-    List<?> categorises;
+    List<?> categories;
     List<?> features;
     List<?> products;
 }

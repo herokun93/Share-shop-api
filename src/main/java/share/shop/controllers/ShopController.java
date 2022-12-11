@@ -170,8 +170,8 @@ public class ShopController {
                         .shop(shop)
                         .build();
 
-                String small = FileUploadUtil.resizeStart("/shops/"+shop.getId().toString(),shopImageRequest.getFiles()[i],400);
-                String medium = FileUploadUtil.resizeStart("/shops/"+shop.getId().toString(),shopImageRequest.getFiles()[i],900);
+                String small = FileUploadUtil.resizeStart("/shops/"+shop.getId().toString(),shopImageRequest.getFiles()[i],300,300);
+                String medium = FileUploadUtil.resizeStart("/shops/"+shop.getId().toString(),shopImageRequest.getFiles()[i],900,900);
                 if(small !=null && medium!=null){
                     newImage.setUrlSmall(small);
                     newImage.setUrlMedium(medium);
