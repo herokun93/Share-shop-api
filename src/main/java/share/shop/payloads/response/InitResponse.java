@@ -13,4 +13,5 @@ public class InitResponse {
     List<?> categories;
     List<?> features;
     List<?> products;
+    List<?> subCategory;
 }

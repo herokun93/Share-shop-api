@@ -11,7 +11,7 @@ import share.shop.payloads.audit.DateAuditResponse;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubCategoryResponse extends DateAuditResponse {
+public class SubCategoryResponse  {
     private String name;
     private Long id;
     private String search;

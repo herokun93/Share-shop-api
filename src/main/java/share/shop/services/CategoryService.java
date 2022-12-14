@@ -36,6 +36,8 @@ public class CategoryService {
     public Optional<Category> findByName(String name){return categoryRepository.findByName(name);}
     public boolean existsByName(String name){return categoryRepository.existsByName(name);}
 
+    public List<Category> findAll(){return categoryRepository.findAll();};
+
     public PagedResponse getAllCategories(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Category> categories = categoryRepository.findAll(pageable);
@@ -89,6 +91,8 @@ public class CategoryService {
         return new PagedResponse<>(subCategoryResponses,subCategories.getNumber(),subCategories.getSize(),subCategories.getTotalElements(),
                 subCategories.getTotalPages(),subCategories.isLast());
     }
+
+
 
 
 
