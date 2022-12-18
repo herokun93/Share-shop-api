@@ -71,5 +71,23 @@ public class SubCategoryService {
                 products.getTotalPages(),products.isLast());
     }
 
+//    public PagedResponse getAllProductForSubCategory(String slug,int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        Page<Product> products = productRepository.findAllBySlug(slug,pageable);
+//
+//        if(products.getNumberOfElements() ==0){
+//            return new PagedResponse(Collections.emptyList(),products.getNumber(),products.getSize(),
+//                    products.getTotalElements(),products.getTotalPages(),products.isLast());
+//        }
+//
+//        List<ProductCardResponse> productCardResponseList = products.map(product -> {
+//            ProductCardResponse productCardResponse = new ProductCardResponse();
+//            return productCardResponse.productCardConvert(product);
+//        }).getContent();
+//
+//        return new PagedResponse<>(productCardResponseList,products.getNumber(),products.getSize(),products.getTotalElements(),
+//                products.getTotalPages(),products.isLast());
+//    }
+
 
 }

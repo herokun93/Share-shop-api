@@ -104,20 +104,20 @@ public class SubCategoryController {
         return subCategoryService.getAllSubCategories(page,size);
     }
 
-    @GetMapping(value="/subCategories/{id}/products")
+    @GetMapping(value="/subCategories/{id}")
     public PagedResponse getAllProductForSubCategory(
-            @PathVariable("id") @Min(0) int id,
+            @PathVariable("id")  int subCategoryId,
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        return subCategoryService.getAllProductForSubCategory(id,page,size);
+        return subCategoryService.getAllProductForSubCategory(subCategoryId,page,size);
     }
 
-    @GetMapping(value="/subCategories/product")
-    public PagedResponse getAllProductForSubCategoryy(
-            @RequestParam("id") @Min(0) int id,
-            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
-            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        return subCategoryService.getAllProductForSubCategory(id,page,size);
-    }
+//    @GetMapping(value="/subCategories/product")
+//    public PagedResponse getAllProductForSubCategoryy(
+//            @RequestParam("id") @Min(0) int id,
+//            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+//            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+//        return subCategoryService.getAllProductForSubCategory(id,page,size);
+//    }
 
 }

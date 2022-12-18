@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import share.shop.models.Image;
 import share.shop.models.Product;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,9 +18,12 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     Product saveAndFlush(Product product);
 
     Page<Product> findAllBySubCategoryId(long id, Pageable pageable);
+    Page<Product> findAllBySlug(String slug, Pageable pageable);
     Page<Product> findAllByCountryId(Long id, Pageable pageable);
     Page<Product> findAllByCreatedBy(long id, Pageable pageable);
     Page<Product> findAllByShopId(long id, Pageable pageable);
-    Page<Product> findAllByFeatured(int id, Pageable pageable);
+    Page<Product> findAllByMode(int id, Pageable pageable);
+    Page<Product> findAllByModeAndEnable(int id, Pageable pageable,boolean enable);
+    List<Product> findByModeLessThanAndEnable(int mode,boolean enable);
 
 }

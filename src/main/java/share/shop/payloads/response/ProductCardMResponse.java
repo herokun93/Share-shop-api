@@ -29,7 +29,8 @@ public class ProductCardMResponse {
     private Long subCategoryId;
     private String subCategoryName;
     private int option;
-    private int featured;
+    private int mode;
+    private String slug;
     private List<ImageMResponse> imageMResponses;
     private List<TagResponse> tagResponseList;
 

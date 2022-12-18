@@ -7,7 +7,7 @@ public class ImageToUrl {
     public static String toUrl(String pathUrl){
         if(pathUrl ==null) return null;
 
-        log.info("PathUrl " + pathUrl);
+//        log.info("PathUrl " + pathUrl);
 
         String link= "http://localhost:2023/api/images/";
         String newPath  = pathUrl.replace("\\","/");

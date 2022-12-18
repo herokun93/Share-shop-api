@@ -1,6 +1,7 @@
 package share.shop.controllers;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,10 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.*;
-import share.shop.payloads.request.ImageSetProductRequest;
-import share.shop.payloads.request.ShopImageRequest;
-import share.shop.payloads.request.ShopInfoRequest;
-import share.shop.payloads.request.ShopRegisterRequest;
+import share.shop.payloads.request.*;
 import share.shop.payloads.response.ImageResponse;
 import share.shop.payloads.response.PagedResponse;
 import share.shop.payloads.response.ShopInfoResponse;
@@ -28,6 +26,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class ShopController {
 
     @Autowired
@@ -44,6 +43,12 @@ public class ShopController {
 
     @Autowired
     private ImageService imageService;
+
+    @Autowired
+    private SubCategoryService subCategoryService;
+
+    @Autowired
+    private CountryService countryService;
 
     @ResponseBody
     @PostMapping(value = "/shops")
@@ -290,6 +295,78 @@ public class ShopController {
         Shop shop = shopService.findByName(shopName).orElseThrow(
                 ()->new ResourceNotFoundException("Shop","name",shopName));
         return  ResponseEntity.ok(new ShopInfoResponse().shopInfoResponse(shop));
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
+    @PostMapping(value= "/shops/product",consumes = {"multipart/form-data"})
+    public ResponseEntity addProduct(@ModelAttribute ProductAndIRequest productAndIRequest) {
+
+        UserLogged userLogged = new UserLogged();
+        String email = userLogged.getEmail();
+
+        String  name = productAndIRequest.getName();
+        String description = productAndIRequest.getDescription();
+        String descriptionSort = productAndIRequest.getDescriptionSort();
+        String tiktok = productAndIRequest.getTiktok();
+        long countryId = productAndIRequest.getCountryId();
+        long subCategoryId = productAndIRequest.getSubCategoryId();
+        boolean sale = productAndIRequest.isSale();;
+        long price = productAndIRequest.getPrice();
+        long salePrice = productAndIRequest.getSalePrice();
+
+        SubCategory subCategoryGet = subCategoryService.findById(subCategoryId)
+                .orElseThrow(()->new ResourceNotFoundException("Product","subCategoryId",subCategoryId));
+
+        Country countryGet = countryService.findById(countryId)
+                .orElseThrow(()->new ResourceNotFoundException("Product","countryId",countryId));
+
+        User user = userService.findByEmail(email).orElseThrow(()->new ResourceNotFoundException("User","email",email));
+
+        Shop shopGet = shopService.findById(user.getShop().getId()).orElseThrow(()->new ResourceNotFoundException("Shop","id",user.getShop().getId()));
+
+        Product productNew = Product.builder()
+                .name(name)
+                .description(description)
+                .tiktok(tiktok)
+                .country(countryGet)
+                .subCategory(subCategoryGet)
+                .descriptionSort(descriptionSort)
+                .shop(shopGet)
+                .sale(sale)
+                .price(price)
+                .salePrice(salePrice)
+                .build();
+
+
+
+
+
+        if(Objects.isNull(productNew))  return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+
+        Product iProduct = productService.save(productNew);
+
+
+        List<Image> images = new ArrayList<>();
+        for(int i = 0; i< productAndIRequest.getFiles().length; i++){
+            Image newImage = Image.builder()
+                    .shop(shopGet)
+                    .build();
+
+            String small = FileUploadUtil.resizeStart("/shops/"+shopGet.getId().toString(),productAndIRequest.getFiles()[i],300,300);
+            String medium = FileUploadUtil.resizeStart("/shops/"+shopGet.getId().toString(),productAndIRequest.getFiles()[i],900,900);
+            if(small !=null && medium!=null){
+                newImage.setUrlSmall(small);
+                newImage.setUrlMedium(medium);
+                newImage.setProduct(iProduct);
+                images.add(newImage);
+            }
+        }
+
+        images = imageService.saveAll(images);
+        if(images.size()==0) return   ResponseEntity.badRequest().build();
+
+
+        return new ResponseEntity(null, HttpStatus.OK);
     }
 }
 

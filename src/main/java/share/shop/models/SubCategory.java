@@ -22,7 +22,7 @@ public class SubCategory extends UserDateAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private String search;
+    private String slug;
     private boolean enable;
 
     public SubCategory(String name, boolean enable) {

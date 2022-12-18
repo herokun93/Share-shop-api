@@ -12,6 +12,9 @@ import java.util.List;
 public class InitResponse {
     List<?> categories;
     List<?> features;
+    List<?> topRated;
+    List<?> topBestSelling;
+    List<?> latest;
     List<?> products;
-    List<?> subCategory;
+
 }

@@ -83,14 +83,11 @@ public class ProductController {
         UserLogged userLogged = new UserLogged();
         String email = userLogged.getEmail();
 
-
         String  name = productRequest.getName();
-        boolean hot = productRequest.isHot();
         int rating = productRequest.getRating();
         String description = productRequest.getDescription();
         String descriptionSort = productRequest.getDescriptionSort();
         String tiktok = productRequest.getTiktok();
-        boolean enable = productRequest.isEnable();
         long countryId = productRequest.getCountryId();
         long subCategoryId = productRequest.getSubCategoryId();
 
@@ -108,11 +105,9 @@ public class ProductController {
 
         Product productNew = Product.builder()
                 .name(name)
-                .hot(hot)
                 .rating(rating)
                 .description(description)
                 .tiktok(tiktok)
-                .enable(enable)
                 .country(countryGet)
                 .subCategory(subCategoryGet)
                 .descriptionSort(descriptionSort)
@@ -188,12 +183,12 @@ public class ProductController {
         return productService.getProducts(page,size);
     }
 
-    @GetMapping(value="/products/featured")
-    public PagedResponse getFeaturedProducts(
+    @GetMapping(value="/products/mode")
+    public PagedResponse getModeProducts(
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
-            @RequestParam(value = "featured", defaultValue = AppConstants.DEFAULT_PRODUCT_FEATURED_SIZE) int featured) {
-        return productService.getAllProductsForFeatured(featured,page,size);
+            @RequestParam(value = "mode", defaultValue = AppConstants.DEFAULT_PRODUCT_FEATURED_SIZE) int mode) {
+        return productService.getAllProductsModeAndEnable(mode,page,size,true);
     }
 
 

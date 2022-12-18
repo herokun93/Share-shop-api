@@ -23,11 +23,12 @@ public class Product extends UserDateAudit {
     private String descriptionSort;
     private String tiktok;
     private boolean enable;
-    private int featured;
+    private int mode;
     private LocalDateTime until;
     private boolean sale;
     private long price;
-    private long sale_price;
+    private long salePrice;
+    private String slug;
 
 
     public Product(String name, boolean hot, int rating, String description, String descriptionSort, String tiktok, boolean enable) {

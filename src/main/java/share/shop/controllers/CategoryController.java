@@ -10,6 +10,7 @@ import share.shop.models.Category;
 import share.shop.payloads.request.CategoryRequest;
 import share.shop.payloads.response.PagedResponse;
 import share.shop.services.CategoryService;
+import share.shop.services.ProductService;
 import share.shop.utils.AppConstants;
 
 import javax.validation.Valid;
@@ -24,6 +25,9 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private ProductService productService;
 
     @PostMapping(value = "/categories")
     @PreAuthorize("hasRole('ADMIN')")
@@ -86,14 +90,22 @@ public class CategoryController {
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
         return categoryService.getAllSubCategoryOfCategory(categoryId,page,size);
     }
-
-    @GetMapping(value="/categories/{search}/subCate")
-    public PagedResponse getAllSubcategoryOfACategoryBySearch(
-            @PathVariable("search") @NotBlank String search,
+    @GetMapping(value="/categories/{id}/pr")
+    public PagedResponse getTopProductCategory(
+            @RequestParam("mode") @Min(0) int mode,
+            @PathVariable("id") @Min(0) int categoryId,
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        return categoryService.getAllSubCategoryOfCategoryBySelect(search,page,size);
+        return productService.getAllProductsModeAndEnable(1,page,size,true);
     }
+
+//    @GetMapping(value="/categories/{search}/subCate")
+//    public PagedResponse getAllSubcategoryOfACategoryBySearch(
+//            @PathVariable("search") @NotBlank String search,
+//            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+//            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+//        return categoryService.getAllSubCategoryOfCategoryBySelect(search,page,size);
+//    }
 
 
 //    @GetMapping(value="/categories/subCategory/{id}")

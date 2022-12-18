@@ -14,7 +14,8 @@ import share.shop.payloads.audit.DateAuditResponse;
 public class SubCategoryResponse  {
     private String name;
     private Long id;
-    private String search;
+    private String slug;
+    private boolean enable;
 
     public SubCategoryResponse subCategoryConvert(SubCategory subCategory){
         ModelMapper modelMapper = new ModelMapper();

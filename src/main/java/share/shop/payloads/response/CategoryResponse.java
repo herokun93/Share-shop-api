@@ -6,9 +6,7 @@ import org.modelmapper.ModelMapper;
 import share.shop.models.Category;
 import share.shop.models.SubCategory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -33,10 +31,24 @@ public class CategoryResponse {
         children = new ArrayList<>();
 
         Collection<SubCategory> subCategories = category.getSubCategories();
-        subCategories.forEach(s->{
-            SubCategoryResponse subCategoryResponse = new SubCategoryResponse();
-            children.add(subCategoryResponse.subCategoryConvert(s));
+
+        subCategories.stream().sorted(new Comparator<SubCategory>() {
+            @Override
+            public int compare(SubCategory o1, SubCategory o2) {
+                return o2.getId().compareTo(o1.getId());
+            }
         });
+
+
+        subCategories.forEach(s->{
+            SubCategoryResponse subCategoryResponse = new SubCategoryResponse().subCategoryConvert(s);
+            if(subCategoryResponse.isEnable()){
+                children.add(subCategoryResponse);
+            }
+
+        });
+
+
 
         CategoryResponse categoryResponse = modelMapper.map(category,CategoryResponse.class);
         categoryResponse.setChildren(children);

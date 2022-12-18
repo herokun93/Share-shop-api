@@ -27,10 +27,11 @@ public class ProductCardResponse {
     private String subCategoryName;
     private Long subCategoryId;
     private int option;
-    private int featured;
+    private int mode;
     private boolean sale;
     private long price;
     private long sale_price;
+    private String slug;
     private LocalDateTime until;
     private List<ImageResponse> imageResponseList;
     private List<TagResponse> tagResponseList;
@@ -42,9 +43,9 @@ public class ProductCardResponse {
         Collection<Image> images = product.getImages();
         images.forEach(e->{
             ImageResponse imageResponse = new ImageResponse();
-            if(e.getPriority()==1){
+//            if(e.getPriority()==1){
                 imageResponseList.add(imageResponse.imageResponseConvert(e));
-            }
+//            }
         });
 
         tagResponseList = new ArrayList<>();

@@ -27,6 +27,10 @@ public class ProductService {
     public Optional<Product>findByShopIdAndId(long shopId,long productId){return  productRepository.findByShopIdAndId(shopId, productId);}
     public Product save(Product product){return productRepository.save(product);};
 
+    public List<Product> findByModeLessThanAndEnable(int mode,boolean enable){
+        return productRepository.findByModeLessThanAndEnable(mode,enable);
+    }
+
 
     public Product saveAndFlush(Product product){return productRepository.saveAndFlush(product);};
 
@@ -51,9 +55,9 @@ public class ProductService {
                 products.getTotalPages(), products.isLast());
     }
 
-    public PagedResponse getAllProductsForFeatured(int feature,int page, int size) {
+    public PagedResponse getAllProductsModeAndEnable(int feature,int page, int size,boolean active) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Product> products = productRepository.findAllByFeatured(feature,pageable);
+        Page<Product> products = productRepository.findAllByModeAndEnable(feature,pageable,true);
 
         if(products.getNumberOfElements()==0){
             return new PagedResponse<>(Collections.emptyList(), products.getNumber(), products.getSize(),
