@@ -26,7 +26,7 @@ public class CategoryResponse {
         CategoryResponse categoryResponse = modelMapper.map(category, CategoryResponse.class);
         return  categoryResponse;
     }
-    public CategoryResponse getAllSubCategoryOrAllCategory(Category category){
+    public CategoryResponse getAllSubCategoryOfACategory(Category category){
         ModelMapper modelMapper = new ModelMapper();
         children = new ArrayList<>();
 

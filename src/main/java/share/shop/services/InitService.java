@@ -8,8 +8,6 @@ import share.shop.payloads.response.CategoryResponse;
 import share.shop.payloads.response.InitResponse;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -30,7 +28,7 @@ public class InitService {
             CategoryResponse categoryResponse = new CategoryResponse();
 
 
-            categoryResponses.add(categoryResponse.getAllSubCategoryOrAllCategory(e));
+            categoryResponses.add(categoryResponse.getAllSubCategoryOfACategory(e));
         });
 
 

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.Category;
 import share.shop.payloads.request.CategoryRequest;
+import share.shop.payloads.response.CategoriesResponse;
 import share.shop.payloads.response.PagedResponse;
 import share.shop.services.CategoryService;
 import share.shop.services.ProductService;
@@ -15,7 +16,7 @@ import share.shop.utils.AppConstants;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -81,6 +82,14 @@ public class CategoryController {
         return categoryService.getAllCategories(page,size);
     }
 
+    @GetMapping(value="/categories/sub")
+    public ResponseEntity<?> getAllSubCategoryOfCategory() {
+
+        List<Category> categories = categoryService.findAll();
+        CategoriesResponse categoriesResponse = new CategoriesResponse(categories);
+        if(Objects.isNull(categoriesResponse))return new ResponseEntity(null,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(categoriesResponse,HttpStatus.OK);
+    }
 
 
     @GetMapping(value="/categories/{id}/subCategory")
