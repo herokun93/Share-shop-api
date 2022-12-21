@@ -1,4 +1,4 @@
-package share.shop.payloads.response;
+package share.shop.payloads.response.init;
 
 import lombok.Builder;
 import lombok.Getter;

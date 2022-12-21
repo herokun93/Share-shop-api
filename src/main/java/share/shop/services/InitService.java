@@ -4,8 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import share.shop.models.Category;
+import share.shop.models.Country;
+import share.shop.payloads.response.CategoriesResponse;
 import share.shop.payloads.response.CategoryResponse;
-import share.shop.payloads.response.InitResponse;
+import share.shop.payloads.response.CountriesResponse;
+import share.shop.payloads.response.init.InitNewPrResponse;
+import share.shop.payloads.response.init.InitResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +19,11 @@ public class InitService {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private CountryService countryService;
+
+
 
     @Autowired
     private ProductService productService;
@@ -44,5 +53,17 @@ public class InitService {
         return initResponse;
 
 
+    }
+    public InitNewPrResponse newProduct(){
+        List<Category> categories = categoryService.findAll();
+        List<Country> countries = countryService.findAll();
+        //CategoriesResponse categoriesResponse = new CategoriesResponse(categories);
+
+        InitNewPrResponse newPrResponse = InitNewPrResponse
+                .builder()
+                .categories(new CategoriesResponse(categories).getCategoriesResponse())
+                .countries(new CountriesResponse(countries).getCountriesResponse())
+                .build();
+        return  newPrResponse;
     }
 }

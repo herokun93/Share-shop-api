@@ -27,4 +27,8 @@ public class InitController {
 //        }
         return ResponseEntity.ok(initService.home());
     }
+    @GetMapping(value = "/init/newProduct")
+    public ResponseEntity newProduct(){
+        return ResponseEntity.ok(initService.newProduct());
+    }
 }

@@ -31,6 +31,7 @@ public class CountryService {
     }
     public Optional<Country> findById(Long id){return countryRepository.findById(id);};
     public Optional<Country> findByName(String name){return countryRepository.findByName(name);};
+    public List<Country> findAll(){return countryRepository.findAll();};
 
     public PagedResponse getAllCountries(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
