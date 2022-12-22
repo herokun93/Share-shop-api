@@ -3,6 +3,7 @@ package share.shop.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,7 @@ import share.shop.securities.UserLogged;
 import share.shop.services.UserService;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -30,8 +32,6 @@ public class AuthController {
 
     @Autowired
     UserService userService;
-
-
 
     @Autowired
     JwtTokenProvider tokenProvider;
@@ -77,6 +77,15 @@ public class AuthController {
 //
 //        return registerUser(authRequest);
 //    }
+
+
+    @GetMapping(value = "/current")
+    private ResponseEntity<?> current() {
+
+
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
     @PostMapping(value = "/login")
     private ResponseEntity<?> loginUser(@Valid @RequestBody AuthRequest authRequest) {
