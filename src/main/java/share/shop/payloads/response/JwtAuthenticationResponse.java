@@ -4,13 +4,15 @@ import share.shop.payloads.request.UserProfile;
 
 public class JwtAuthenticationResponse {
     private String accessToken;
+    private String refreshToken;
 
     private String tokenType = "Bearer";
 
     private UserProfile user;
 
-    public JwtAuthenticationResponse(String accessToken, UserProfile user) {
+    public JwtAuthenticationResponse(String accessToken,String refreshToken, UserProfile user) {
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
         this.user = user;
     }
 
@@ -38,4 +40,11 @@ public class JwtAuthenticationResponse {
         this.user = user;
     }
 
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }

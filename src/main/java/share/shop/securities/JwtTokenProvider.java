@@ -20,12 +20,28 @@ public class JwtTokenProvider {
     @Value("${app.jwtExpirationInMs}")
     private int jwtExpirationInMs;
 
+    @Value("${app.jwtExpirationInMsReToken}")
+    private int jwtExpirationInMsReToken;
+
+
+
     public String generateToken(Authentication authentication) {
 
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpirationInMs);
+
+        return Jwts.builder().setSubject(Long.toString(userPrincipal.getId())).setIssuedAt(new Date())
+                .setExpiration(expiryDate).signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
+    }
+
+    public String generateRefreshToken(Authentication authentication) {
+
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtExpirationInMsReToken);
 
         return Jwts.builder().setSubject(Long.toString(userPrincipal.getId())).setIssuedAt(new Date())
                 .setExpiration(expiryDate).signWith(SignatureAlgorithm.HS512, jwtSecret).compact();

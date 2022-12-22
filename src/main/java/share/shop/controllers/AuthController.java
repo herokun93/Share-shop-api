@@ -16,6 +16,7 @@ import share.shop.payloads.request.UserProfile;
 import share.shop.payloads.response.ApiResponse;
 import share.shop.payloads.response.JwtAuthenticationResponse;
 import share.shop.securities.JwtTokenProvider;
+import share.shop.securities.UserLogged;
 import share.shop.services.UserService;
 
 import javax.validation.Valid;
@@ -93,9 +94,35 @@ public class AuthController {
         UserProfile userProfile = new UserProfile();
 
 
-        String jwt = tokenProvider.generateToken(authentication);
+        String token = tokenProvider.generateToken(authentication);
+        String refreshToken = tokenProvider.generateRefreshToken(authentication);
 
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt, userProfile.userProfileConvert(userGet)));
+        return ResponseEntity.ok(new JwtAuthenticationResponse(token,refreshToken, userProfile.userProfileConvert(userGet)));
+    }
+
+    @PostMapping(value = "/refreshToken")
+    private ResponseEntity<?> refreshToken() {
+
+        UserLogged userLogged = new UserLogged();
+        String email = userLogged.getEmail();
+        User user = userService.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "Email", ""));
+        String password = user.getPassword();
+
+
+        User userGet = userService.findByEmail(email).orElseThrow(()-> {
+            throw new ResourceNotFoundException("user","email",email);});
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(email, password));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        UserProfile userProfile = new UserProfile();
+
+
+        String token = tokenProvider.generateToken(authentication);
+        String refreshToken = tokenProvider.generateRefreshToken(authentication);
+
+        return ResponseEntity.ok(new JwtAuthenticationResponse(token,refreshToken, userProfile.userProfileConvert(userGet)));
     }
 
     @PostMapping(value = "/register")
