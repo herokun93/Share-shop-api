@@ -82,6 +82,7 @@ public class CategoryController {
         return categoryService.getAllCategories(page,size);
     }
 
+    @PreAuthorize("hasAnyRole('PARTNER','ADMIN','USER','STAFF')")
     @GetMapping(value="/categories/sub")
     public ResponseEntity<?> getAllSubCategoryOfCategory() {
 

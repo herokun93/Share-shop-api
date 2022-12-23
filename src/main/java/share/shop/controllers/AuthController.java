@@ -1,5 +1,6 @@
 package share.shop.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,16 +26,17 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
+@Slf4j
 public class AuthController {
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    JwtTokenProvider tokenProvider;
+    private JwtTokenProvider tokenProvider;
 
 //    @PostMapping("/signIn")
 //    public ResponseEntity<?> signIn(@Valid @RequestBody LoginRequest loginRequest) {
@@ -79,18 +81,20 @@ public class AuthController {
 //    }
 
 
+    @PreAuthorize("hasAnyRole('PARTNER','ADMIN','USER','STAFF')")
     @GetMapping(value = "/current")
-    private ResponseEntity<?> current() {
-
-
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @ResponseBody
+    public ResponseEntity current() {
+         return ResponseEntity.ok(null);
     }
 
     @PostMapping(value = "/login")
-    private ResponseEntity<?> loginUser(@Valid @RequestBody AuthRequest authRequest) {
+    @ResponseBody
+    public ResponseEntity<?> loginUser(@Valid @RequestBody AuthRequest authRequest) {
 
         String email = authRequest.getEmail();
+        log.info("Email login {}",email);
+
 
         User userGet = userService.findByEmail(email).orElseThrow(()-> {
             throw new ResourceNotFoundException("user","email",email);});
