@@ -92,6 +92,11 @@ public class CategoryController {
         return new ResponseEntity(categoriesResponse,HttpStatus.OK);
     }
 
+    @GetMapping(value="/categories/test")
+    public ResponseEntity test(){
+        return ResponseEntity.ok(categoryService.test());
+    }
+
 
     @GetMapping(value="/categories/{id}/subCategory")
     public PagedResponse getAllSubcategoryOfACategory(

@@ -36,8 +36,12 @@ public class CategoryService {
     }
     public Optional<Category> findByName(String name){return categoryRepository.findByName(name);}
     public boolean existsByName(String name){return categoryRepository.existsByName(name);}
+    public List<Category> test(){return categoryRepository.test();}
 
-    public List<Category> findAll(){return categoryRepository.findAll();};
+    public List<Category> findAll(){
+
+        return categoryRepository.findAll();
+    };
     public List<Category> findAllByEnable(Sort seatNumber, boolean enable){return categoryRepository.findAllByEnable(seatNumber,enable);};
 
     public PagedResponse getAllCategories(int page, int size) {

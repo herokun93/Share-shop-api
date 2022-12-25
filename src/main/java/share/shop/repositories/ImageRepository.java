@@ -21,6 +21,7 @@ public interface ImageRepository extends JpaRepository<Image,Long> {
     Page<Image> findAllByProductId(Long id, Pageable pageable);
     Page<Image> findAllByShopId(Long id, Pageable pageable);
     Optional<Image>findByShopIdAndId(Long shopId,Long id);
+    void deleteById(Long id);
 
 
 

@@ -133,6 +133,34 @@ public class ShopController {
         return ResponseEntity.ok(null);
     }
 
+    @PreAuthorize("hasRole('PARTNER')")
+    @GetMapping(value = "/shops/p/products")
+    public PagedResponse getProductsOfShop(
+            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+        UserLogged userLogged = new UserLogged();
+        String email = userLogged.getEmail();
+
+        User user = userService.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "Email", ""));
+        Long shopId  = user.getShop().getId();
+
+        return productService.getAllProductsForShop(shopId, page, size);
+    }
+
+//    @PreAuthorize("hasRole('PARTNER')")
+//    @GetMapping(value = "/shops/p/products/{id}")
+//    public PagedResponse getAProductOfShop(
+//            @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
+//            @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
+//        UserLogged userLogged = new UserLogged();
+//        String email = userLogged.getEmail();
+//
+//        User user = userService.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "Email", ""));
+//        Long shopId  = user.getShop().getId();
+//
+//        return productService.getAllProductsForShop(shopId, page, size);
+//    }
+
 
     @GetMapping(value = "/shops/{id}/products")
     public PagedResponse getProductsByShopById(
@@ -231,6 +259,28 @@ public class ShopController {
 
     }
 
+
+    @PreAuthorize("hasRole('PARTNER')")
+    @DeleteMapping(value = "/shops/images/{id}")
+    public ResponseEntity deleteImage(@Valid @PathVariable("id") Long imageId)
+    {
+
+
+        UserLogged userLogged = new UserLogged();
+        String email = userLogged.getEmail();
+        User user = userService.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "Email", ""));
+        Shop shop = shopService.findByUserId(user.getId()).orElseThrow(()->new ResourceNotFoundException("Shop","id",user.getId()));
+        long shopId = shop.getId();
+
+        Image imageGet = imageService.findByShopIdAndId(shopId,imageId).orElseThrow(()->
+                new ResourceNotFoundException("Image","Id",imageId));
+
+
+       imageService.deleteById(imageId);
+
+        return ResponseEntity.ok(null);
+
+    }
     @PreAuthorize("hasRole('PARTNER')")
     @PutMapping(value = "/shops/images/{id}")
     public ResponseEntity putImageByShopName(

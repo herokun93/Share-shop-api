@@ -64,6 +64,17 @@ public class ProductController {
         }
         return  new ResponseEntity(productDetailsResponse.productDetailsConvert(product.get()), HttpStatus.OK);
     }
+    @PreAuthorize("hasRole('PARTNER')")
+    @GetMapping(value = "/products/p/{id}")
+    public ResponseEntity getProductP(@PathVariable("id") @Min(0) long id){
+
+        Optional<Product> product = productService.findById(id);
+        ProductDetailsResponse productDetailsResponse = new ProductDetailsResponse();
+        if(!product.isPresent()){
+            new ResponseEntity(null, HttpStatus.BAD_REQUEST);
+        }
+        return  new ResponseEntity(productDetailsResponse.productDetailsConvert(product.get()), HttpStatus.OK);
+    }
 
     @GetMapping(value = "/products/{id}/card")
     public ResponseEntity getProductCard(@PathVariable("id") @Min(0) long id){

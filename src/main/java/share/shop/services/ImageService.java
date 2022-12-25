@@ -20,6 +20,8 @@ public class ImageService {
     @Autowired
     private ImageRepository imageRepository;
 
+    public void deleteById(Long id){imageRepository.deleteById(id);}
+
     public Image save(Image image){
         return imageRepository.save(image);
     }

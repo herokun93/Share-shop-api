@@ -28,6 +28,7 @@ public class ProductDetailsResponse extends UserDateAuditResponse {
     private String tiktok;
     private boolean enable;
     private Long countryId;
+    private String countryName;
     private Long subCategoryId;
     private int option;
     private int featured;

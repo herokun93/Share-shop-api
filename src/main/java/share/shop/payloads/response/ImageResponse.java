@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ImageResponse {
 
-//    private Long id;
+    private Long id;
     private String urlSmall;
     private String urlMedium;
     private int priority;
