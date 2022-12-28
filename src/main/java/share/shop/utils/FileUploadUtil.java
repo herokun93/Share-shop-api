@@ -25,6 +25,13 @@ public class FileUploadUtil {
             throws IOException {
         Path uploadPath = Paths.get("Files-Upload/"+subFolder) ;
 
+        String name =  multipartFile.getOriginalFilename();
+
+        log.info("imageFile.getOriginalFilename(): {} ",name);
+        if(name.indexOf(".png")==-1 || name.indexOf(".PNG")==-1){
+            name = name+ System.currentTimeMillis() +".png";
+        }
+
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
@@ -55,7 +62,14 @@ public class FileUploadUtil {
 
         String imageFolder=uploadPath.toString();
 
-        Path pathFile = Paths.get(imageFolder, imageFile.getOriginalFilename());
+        String name =  imageFile.getOriginalFilename();
+
+        log.info("imageFile.getOriginalFilename(): {} ",name);
+        if(name.indexOf(".png")==-1 || name.indexOf(".PNG")==-1){
+            name = name+ System.currentTimeMillis() +".png";
+        }
+
+        Path pathFile = Paths.get(imageFolder,name);
         try {
             Files.write(pathFile, imageFile.getBytes());
         } catch (IOException e) {
