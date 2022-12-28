@@ -21,15 +21,12 @@ public class FileUploadUtil {
 
 
 
-    public static String saveFile(String fileExtension, MultipartFile multipartFile, String subFolder)
+    public static String saveFile(String subFolder, MultipartFile multipartFile,String fileExtension)
             throws IOException {
         Path uploadPath = Paths.get("Files-Upload/"+subFolder) ;
 
-        String name =  multipartFile.getOriginalFilename();
-
-        log.info("imageFile.getOriginalFilename(): {} ",name);
-        if(name.indexOf(".png")==-1 || name.indexOf(".PNG")==-1){
-            name = name+ System.currentTimeMillis() +".png";
+        if(fileExtension.indexOf(".png")==-1 || fileExtension.indexOf(".PNG")==-1){
+            fileExtension = ".png";
         }
 
         if (!Files.exists(uploadPath)) {
@@ -40,7 +37,7 @@ public class FileUploadUtil {
         Path filePath ;
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            filePath = uploadPath.resolve(fileCode + "."+fileExtension);
+            filePath = uploadPath.resolve(fileCode +fileExtension);
             Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ioe) {
             throw new IOException("Could not save file: " + fileExtension, ioe);

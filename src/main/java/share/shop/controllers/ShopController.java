@@ -19,6 +19,7 @@ import share.shop.utils.AppConstants;
 import share.shop.utils.FileUploadUtil;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -203,8 +204,11 @@ public class ShopController {
                         .shop(shop)
                         .build();
 
-                String small = FileUploadUtil.resizeStart("/shops/"+shop.getId().toString(),shopImageRequest.getFiles()[i],300,300);
-                String medium = FileUploadUtil.resizeStart("/shops/"+shop.getId().toString(),shopImageRequest.getFiles()[i],900,900);
+                String small = FileUploadUtil.saveFile("/shops/"+shop.getId().toString(),shopImageRequest.getFiles()[i],".png");
+                String medium = FileUploadUtil.saveFile("/shops/"+shop.getId().toString(),shopImageRequest.getFiles()[i],".png");
+
+                //String small = FileUploadUtil.resizeStart("/shops/"+shop.getId().toString(),shopImageRequest.getFiles()[i],300,300);
+                //String medium = FileUploadUtil.resizeStart("/shops/"+shop.getId().toString(),shopImageRequest.getFiles()[i],900,900);
                 if(small !=null && medium!=null){
                     newImage.setUrlSmall(small);
                     newImage.setUrlMedium(medium);
@@ -349,7 +353,7 @@ public class ShopController {
 
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")
     @PostMapping(value= "/shops/product",consumes = {"multipart/form-data"})
-    public ResponseEntity addProduct(@ModelAttribute ProductAndIRequest productAndIRequest) {
+    public ResponseEntity addProduct(@ModelAttribute ProductAndIRequest productAndIRequest) throws IOException {
 
         UserLogged userLogged = new UserLogged();
         String email = userLogged.getEmail();
@@ -402,8 +406,10 @@ public class ShopController {
                     .shop(shopGet)
                     .build();
 
-            String small = FileUploadUtil.resizeStart("/shops/"+shopGet.getId().toString(),productAndIRequest.getFiles()[i],300,300);
-            String medium = FileUploadUtil.resizeStart("/shops/"+shopGet.getId().toString(),productAndIRequest.getFiles()[i],900,900);
+//            String small = FileUploadUtil.resizeStart("/shops/"+shopGet.getId().toString(),productAndIRequest.getFiles()[i],300,300);
+//            String medium = FileUploadUtil.resizeStart("/shops/"+shopGet.getId().toString(),productAndIRequest.getFiles()[i],900,900);
+            String small = FileUploadUtil.saveFile("/shops/"+shopGet.getId().toString(),productAndIRequest.getFiles()[i],".png");
+            String medium = FileUploadUtil.saveFile("/shops/"+shopGet.getId().toString(),productAndIRequest.getFiles()[i],".png");
             if(small !=null && medium!=null){
                 newImage.setUrlSmall(small);
                 newImage.setUrlMedium(medium);
