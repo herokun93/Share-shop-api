@@ -3,6 +3,7 @@ package share.shop.payloads.response.init;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import share.shop.payloads.response.ProductModeResponse;
 
 import java.util.List;
 
@@ -16,5 +17,6 @@ public class InitResponse {
     List<?> topBestSelling;
     List<?> latest;
     List<?> products;
+    List<ProductModeResponse> productModes;
 
 }

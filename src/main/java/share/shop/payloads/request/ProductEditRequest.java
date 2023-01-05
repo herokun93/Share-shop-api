@@ -18,13 +18,6 @@ public class ProductEditRequest {
     @NotBlank(message = "Product name shouldn't be null")
     private String name;
 
-    @NotBlank
-    private boolean hot;
-
-    @Min(1)
-    @Max(5)
-    @NotBlank
-    private int rating;
 
     @Size(min = 8,max=1000,message = "Product description must be between 8 and 200 characters")
     @NotBlank(message = "Product description shouldn't be null")
@@ -38,14 +31,23 @@ public class ProductEditRequest {
     private String tiktok;
 
     @NotBlank
-    private boolean enable;
+    private String sale;
 
     @NotBlank
-    private Long countryId;
+    private String countryId;
 
     @NotBlank
-    private Long subCategoryId;
+    private String subCategoryId;
 
     @NotBlank
-    private Long productId;
+    private String productId;
+
+    @NotBlank
+    private String shopId;
+
+
+    @NotBlank
+    private String price;
+    @NotBlank
+    private String salePrice;
 }

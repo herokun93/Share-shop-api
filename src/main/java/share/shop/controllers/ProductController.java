@@ -10,6 +10,8 @@ import share.shop.exceptions.ResourceNotFoundException;
 import share.shop.models.*;
 import share.shop.payloads.request.ProductEditRequest;
 import share.shop.payloads.request.ProductRequest;
+import share.shop.payloads.request.ShopImageRequest;
+import share.shop.payloads.response.ImageResponse;
 import share.shop.payloads.response.PagedResponse;
 import share.shop.payloads.response.ProductCardResponse;
 import share.shop.payloads.response.ProductDetailsResponse;
@@ -17,6 +19,7 @@ import share.shop.securities.UserLogged;
 import share.shop.services.*;
 import share.shop.telegram.TelegramClient;
 import share.shop.utils.AppConstants;
+import share.shop.utils.FileUploadUtil;
 
 import javax.validation.constraints.Min;
 import java.util.*;
@@ -86,6 +89,52 @@ public class ProductController {
         return  new ResponseEntity(productCardResponse.productCardConvert(product.get()), HttpStatus.OK);
     }
 
+
+
+    @ResponseBody
+    @PostMapping(value="/products/{id}/images")
+    @PreAuthorize("hasRole('PARTNER')")
+    public ResponseEntity postProductAddImage(
+            @PathVariable("id") @Min(0) long productId,
+            ShopImageRequest shopImageRequest){
+
+        try {
+            UserLogged userLogged = new UserLogged();
+            String email = userLogged.getEmail();
+            User user = userService.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "Email", ""));
+            Shop shop = shopService.findByUserId(user.getId()).orElseThrow(()->new ResourceNotFoundException("Shop","id",user.getId()));
+            Product product = productService.findById(productId).orElseThrow(()->new ResourceNotFoundException("Product","id",productId));
+
+            Image newImage = Image.builder()
+                    .shop(shop)
+                    .product(product)
+                    .build();
+
+            log.info("Upload image");
+
+            String small = FileUploadUtil.saveFile("/shops/"+shop.getId().toString(),shopImageRequest.getFile(),shopImageRequest.getFile().getName());
+            String medium = FileUploadUtil.saveFile("/shops/"+shop.getId().toString(),shopImageRequest.getFile(),shopImageRequest.getFile().getName());
+
+            if(small !=null && medium!=null)
+            {
+                newImage.setUrlSmall(small);
+                newImage.setUrlMedium(medium);
+
+                newImage = imageService.save(newImage);
+                if(Objects.isNull(newImage)) return   ResponseEntity.badRequest().build();
+
+                return new ResponseEntity(new ImageResponse().imageResponseConvert(newImage), HttpStatus.OK);
+
+            }
+
+            return   ResponseEntity.badRequest().build();
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+    }
+
     @ResponseBody
     @PostMapping(value="/products")
     @PreAuthorize("hasRole('PARTNER')")
@@ -137,28 +186,28 @@ public class ProductController {
     @ResponseBody
     @PutMapping(value="/products")
     @PreAuthorize("hasRole('PARTNER')")
-    public ResponseEntity putProduct(@RequestBody ProductEditRequest productEditRequest){
+    public ResponseEntity putProduct( ProductEditRequest productEditRequest){
 
         log.info("Update product");
 
         String  name = productEditRequest.getName();
-        boolean hot = productEditRequest.isHot();
-        int rating = productEditRequest.getRating();
         String description = productEditRequest.getDescription();
         String descriptionSort = productEditRequest.getDescriptionSort();
         String tiktok = productEditRequest.getTiktok();
-        boolean enable = productEditRequest.isEnable();
-        long countryId = productEditRequest.getCountryId();
-        long subCategoryId = productEditRequest.getSubCategoryId();
-        long productId = productEditRequest.getProductId();
+        long countryId = Long.parseLong(productEditRequest.getCountryId());
+        long subCategoryId = Long.parseLong(productEditRequest.getSubCategoryId());
+        long productId = Long.parseLong(productEditRequest.getProductId());
+        long price = Long.parseLong(productEditRequest.getPrice());
+        long salePrice = Long.parseLong(productEditRequest.getSalePrice());
+        long shopId = Long.parseLong(productEditRequest.getShopId());
 
-        UserLogged userLogged = new UserLogged();
-        String email = userLogged.getEmail();
-        User user = userService.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "Email", ""));
+//        UserLogged userLogged = new UserLogged();
+//        String email = userLogged.getEmail();
+//        User user = userService.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User", "Email", ""));
+//
+//        Shop shopGet = shopService.findByUserId(user.getId()).orElseThrow(()->new ResourceNotFoundException("Shop","id",user.getId()));
 
-        Shop shopGet = shopService.findByUserId(user.getId()).orElseThrow(()->new ResourceNotFoundException("Shop","id",user.getId()));
-
-        Product product = productService.findByShopIdAndId(shopGet.getId(),productId).orElseThrow(()->new ResourceNotFoundException("Product","id",productId));
+        Product product = productService.findByShopIdAndId(shopId,productId).orElseThrow(()->new ResourceNotFoundException("Product","id",productId));
 
 
         SubCategory subCategoryGet = subCategoryService.findById(subCategoryId)
@@ -168,14 +217,19 @@ public class ProductController {
                 .orElseThrow(()->new ResourceNotFoundException("Product","countryId",countryId));
 
 
+
         product.setName(name);
-        product.setHot(hot);
-        product.setRating(rating);
+        product.setHot(false);
+        if(productEditRequest.getSale().contains("true")){
+            product.setSale(true);
+        }else product.setSale(false);
+        product.setRating(3);
         product.setDescription(description);
         product.setDescriptionSort(descriptionSort);
         product.setTiktok(tiktok);
-        product.setEnable(enable);
         product.setCountry(countryGet);
+        product.setPrice(price);
+        product.setSalePrice(salePrice);
         product.setSubCategory(subCategoryGet);
 
 

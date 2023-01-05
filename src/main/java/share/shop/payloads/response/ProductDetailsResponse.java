@@ -34,7 +34,7 @@ public class ProductDetailsResponse extends UserDateAuditResponse {
     private int featured;
     private boolean sale;
     private long price;
-    private long sale_price;
+    private long salePrice;
     private LocalDateTime until;
     private List<ImageResponse> imageResponseList;
     private List<TagResponse> tagResponseList;

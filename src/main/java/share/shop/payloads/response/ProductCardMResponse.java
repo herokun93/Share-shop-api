@@ -30,6 +30,8 @@ public class ProductCardMResponse {
     private String subCategoryName;
     private int option;
     private int mode;
+    private long price;
+    private long salePrice;
     private String slug;
     private List<ImageMResponse> imageMResponses;
     private List<TagResponse> tagResponseList;

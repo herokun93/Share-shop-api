@@ -81,8 +81,8 @@ public class AuthController {
 //    }
 
 
-    @PreAuthorize("hasAnyRole('PARTNER','ADMIN','USER','STAFF')")
-    @GetMapping(value = "/current")
+    @PreAuthorize("hasAnyRole('PARTNER','ADMIN')")
+    @GetMapping(value = "/p/current")
     @ResponseBody
     public ResponseEntity current() {
          return ResponseEntity.ok(null);
@@ -93,8 +93,6 @@ public class AuthController {
     public ResponseEntity<?> loginUser(@Valid @RequestBody AuthRequest authRequest) {
 
         String email = authRequest.getEmail();
-        log.info("Email login {}",email);
-
 
         User userGet = userService.findByEmail(email).orElseThrow(()-> {
             throw new ResourceNotFoundException("user","email",email);});

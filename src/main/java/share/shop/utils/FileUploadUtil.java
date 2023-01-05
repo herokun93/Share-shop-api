@@ -23,27 +23,36 @@ public class FileUploadUtil {
 
     public static String saveFile(String subFolder, MultipartFile multipartFile,String fileExtension)
             throws IOException {
-        Path uploadPath = Paths.get("Files-Upload/"+subFolder) ;
 
-        if(fileExtension.indexOf(".png")==-1 || fileExtension.indexOf(".PNG")==-1){
-            fileExtension = ".png";
-        }
+
+        log.info("test create file");
+
+        Path uploadPath = Paths.get("Files-Upload/"+subFolder) ;
+        log.info("file extension {}",fileExtension);
+
+        fileExtension = fileExtension.replace("image/",".");
+
+        log.info("asdad");
 
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
 
         String fileCode = RandomStringUtils.randomAlphanumeric(8);
-        Path filePath ;
 
-        try (InputStream inputStream = multipartFile.getInputStream()) {
-            filePath = uploadPath.resolve(fileCode +fileExtension);
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
+        log.info("test");
+
+        try {
+            log.info("save file");
+            Path filePath = uploadPath.resolve(fileCode +fileExtension);
+            log.info("save file");
+            Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            return filePath.toString();
         } catch (IOException ioe) {
             throw new IOException("Could not save file: " + fileExtension, ioe);
         }
 
-        return filePath.toString();
+
     }
 
     public static String resizeStart(String subFolder,MultipartFile imageFile,Integer imageHSize,Integer imageWSize){

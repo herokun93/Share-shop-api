@@ -26,4 +26,6 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     Page<Product> findAllByModeAndEnable(int id, Pageable pageable,boolean enable);
     List<Product> findByModeLessThanAndEnable(int mode,boolean enable);
 
+
+
 }

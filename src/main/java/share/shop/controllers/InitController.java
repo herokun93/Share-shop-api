@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import share.shop.payloads.request.init.PartnerRequest;
 import share.shop.services.InitService;
+import share.shop.services.ProductModeService;
 
 @RestController
 @RequestMapping("/api")
@@ -14,6 +17,17 @@ public class InitController {
 
     @Autowired
     private InitService initService;
+
+    @Autowired
+    private ProductModeService productModeService;
+
+    @GetMapping(value = "/init/home2")
+    public ResponseEntity getProductCard2(){
+
+
+
+        return ResponseEntity.ok(initService.home());
+    }
 
 
     @GetMapping(value = "/init/home")
@@ -28,6 +42,12 @@ public class InitController {
 //        }
         return ResponseEntity.ok(initService.home());
     }
+//    @PreAuthorize("hasAnyRole('PARTNER','ADMIN')")
+//    @GetMapping(value = "/init/newProduct")
+//    public ResponseEntity newProduct(@RequestBody PartnerRequest partnerRequest){
+//        return ResponseEntity.ok(initService.newProduct());
+//    }
+
     @PreAuthorize("hasAnyRole('PARTNER','ADMIN')")
     @GetMapping(value = "/init/newProduct")
     public ResponseEntity newProduct(){

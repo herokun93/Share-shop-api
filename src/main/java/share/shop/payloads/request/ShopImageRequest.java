@@ -14,5 +14,8 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class ShopImageRequest {
     @NotBlank
-    private MultipartFile[] files;
+    private MultipartFile file;
+
+//    @NotBlank
+//    private String type;
 }

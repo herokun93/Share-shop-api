@@ -18,7 +18,7 @@ public class ImageResponse {
     private Long id;
     private String urlSmall;
     private String urlMedium;
-    private int priority;
+ //   private int priority;
 //    private Long shopId;
 //    private Long productId;
 

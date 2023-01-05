@@ -30,7 +30,7 @@ public class ProductCardResponse {
     private int mode;
     private boolean sale;
     private long price;
-    private long sale_price;
+    private long salePrice;
     private String slug;
     private LocalDateTime until;
     private List<ImageResponse> imageResponseList;
@@ -41,12 +41,12 @@ public class ProductCardResponse {
         imageResponseList = new ArrayList<>();
 
         Collection<Image> images = product.getImages();
-        images.forEach(e->{
+
+        if(images.size()>=1){
             ImageResponse imageResponse = new ImageResponse();
-//            if(e.getPriority()==1){
-                imageResponseList.add(imageResponse.imageResponseConvert(e));
-//            }
-        });
+            imageResponseList.add(imageResponse.imageResponseConvert(images.stream().findFirst().get()));
+        }
+
 
         tagResponseList = new ArrayList<>();
         Collection<Tag> tags = product.getTags();

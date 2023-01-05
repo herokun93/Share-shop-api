@@ -14,6 +14,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserProfile {
+    private Long shopId;
     private Long id;
     private String email;
     private Instant birthday;

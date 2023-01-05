@@ -33,17 +33,17 @@ public class ProductAndIRequest {
 
 
     @NotBlank
-    private Long countryId;
+    private String countryId;
 
     @NotBlank
-    private Long subCategoryId;
+    private String subCategoryId;
 
     @NotBlank
-    private boolean sale;
+    private String sale;
     @NotBlank
-    private long price;
+    private String price;
     @NotBlank
-    private long salePrice;
+    private String salePrice;
 
     @NotBlank
     private MultipartFile[] files;
