@@ -19,6 +19,7 @@ public class CategoryResponse {
     private Long id;
     private String name;
     private String search;
+    private String imageUrl;
     private List<SubCategoryResponse> children;
 
     public CategoryResponse categoryResponseConvert(Category category){

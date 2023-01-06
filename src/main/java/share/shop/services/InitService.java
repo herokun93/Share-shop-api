@@ -58,6 +58,11 @@ public class InitService {
 
 
 
+//        InitResponse initResponse = InitResponse.builder()
+//                .productModes(new ProductModeResponse().setProductModesResponse(productModes))
+//                .categories(categoryResponses)
+//                .build();
+
         InitResponse initResponse = InitResponse.builder()
                 .productModes(new ProductModeResponse().setProductModesResponse(productModes))
                 .categories(categoryResponses)

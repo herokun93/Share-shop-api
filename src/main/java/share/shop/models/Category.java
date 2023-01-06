@@ -22,6 +22,7 @@ public class Category extends UserDateAudit {
     private Long id;
     private String name;
     private boolean enable;
+    private String imageUrl;
     private String search;
 
     public Category(String name, boolean enable) {
