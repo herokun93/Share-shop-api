@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import share.shop.payloads.request.init.PartnerRequest;
 import share.shop.services.InitService;
 import share.shop.services.ProductModeService;
+import share.shop.services.ProductService;
 
 @RestController
 @RequestMapping("/api")
@@ -21,17 +22,37 @@ public class InitController {
     @Autowired
     private ProductModeService productModeService;
 
+    @Autowired
+    private ProductService productService;
+
     @GetMapping(value = "/init/home2")
     public ResponseEntity getProductCard2(){
+
+       // productService.getProductCardByShopId();
+        productService.getProductDetailsById();
+
 
 
 
         return ResponseEntity.ok(initService.home());
     }
 
+    @GetMapping(value = "/init/xxx")
+    public ResponseEntity xxx(){
+
+        // productService.getProductCardByShopId();
+        productService.getProductDetailsById();
+
+
+
+
+        return ResponseEntity.ok(productService.getProductDetailsById());
+    }
+
 
     @GetMapping(value = "/init/home")
     public ResponseEntity getProductCard(){
+
 
 
 

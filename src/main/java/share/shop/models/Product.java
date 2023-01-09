@@ -73,6 +73,9 @@ public class Product extends UserDateAudit {
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private Collection<Comment> comments;
 
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    private Collection<Price> prices;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="product_mode_id")
     private ProductMode productMode;

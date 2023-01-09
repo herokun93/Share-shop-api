@@ -66,7 +66,7 @@ public class InitService {
         InitResponse initResponse = InitResponse.builder()
                 .productModes(new ProductModeResponse().setProductModesResponse(productModes))
                 .categories(categoryResponses)
-                .features(productService.getAllProductsModeAndEnable(1,0,20,true).getContent())
+                .features(productService.getAllProductsByProductModeAndEnable(1,0,20,true).getContent())
                 .products(productService.getAllProductsForShop(Long.valueOf(1),0,20).getContent())
                 .build();
 

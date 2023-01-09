@@ -3,6 +3,7 @@ package share.shop.payloads.response;
 import lombok.*;
 import org.modelmapper.ModelMapper;
 import share.shop.models.Image;
+import share.shop.models.Price;
 import share.shop.models.Product;
 import share.shop.models.Tag;
 
@@ -35,10 +36,13 @@ public class ProductCardResponse {
     private LocalDateTime until;
     private List<ImageResponse> imageResponseList;
     private List<TagResponse> tagResponseList;
+    private List<PriceResponse> priceResponses;
 
     public ProductCardResponse productCardConvert(Product product){
         ModelMapper modelMapper = new ModelMapper();
         imageResponseList = new ArrayList<>();
+        priceResponses = new ArrayList<>();
+        tagResponseList = new ArrayList<>();
 
         Collection<Image> images = product.getImages();
 
@@ -48,17 +52,23 @@ public class ProductCardResponse {
         }
 
 
-        tagResponseList = new ArrayList<>();
+
         Collection<Tag> tags = product.getTags();
         tags.forEach(t->{
             TagResponse tagResponse = new TagResponse();
             tagResponseList.add(tagResponse.tagConvert(t));
         });
 
+        Collection<Price> prices = product.getPrices();
+        prices.forEach(p->{
+            priceResponses.add(new PriceResponse().priceResponseConvert(p));
+        });
+
 
         ProductCardResponse productCardResponse = modelMapper.map(product, ProductCardResponse.class);
         productCardResponse.setImageResponseList(imageResponseList);
         productCardResponse.setTagResponseList(tagResponseList);
+        productCardResponse.setPriceResponses(priceResponses);
 
         return productCardResponse;
     }
