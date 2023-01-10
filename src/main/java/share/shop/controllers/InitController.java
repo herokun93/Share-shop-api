@@ -12,6 +12,8 @@ import share.shop.services.InitService;
 import share.shop.services.ProductModeService;
 import share.shop.services.ProductService;
 
+import java.time.Instant;
+
 @RestController
 @RequestMapping("/api")
 public class InitController {
@@ -29,7 +31,7 @@ public class InitController {
     public ResponseEntity getProductCard2(){
 
        // productService.getProductCardByShopId();
-        productService.getProductDetailsById();
+        //productService.getProductDetailsById(1);
 
 
 
@@ -41,13 +43,28 @@ public class InitController {
     public ResponseEntity xxx(){
 
         // productService.getProductCardByShopId();
-        productService.getProductDetailsById();
 
 
 
 
-        return ResponseEntity.ok(productService.getProductDetailsById());
+
+        return ResponseEntity.ok(productService.getProductDetailsById(1));
     }
+
+    @GetMapping(value = "/init/shop")
+    public ResponseEntity getProductCardByShopId(){
+
+        // productService.getProductCardByShopId();
+
+
+
+
+
+        return ResponseEntity.ok(productService.getProductCardByShopId(1,0,2));
+    }
+
+
+
 
 
     @GetMapping(value = "/init/home")

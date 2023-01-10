@@ -7,7 +7,7 @@ public interface IPrice {
     String getPriceName();
     long getPricePrice();
     long getPriceSalePrice();
-    Instant getStartAt();
-    Instant getSaleFinishAt();
+    Instant getPriceStartAt();
+    Instant getPriceFinishAt();
     boolean getPriceSale();
 }

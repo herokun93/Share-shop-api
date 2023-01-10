@@ -12,9 +12,11 @@ import share.shop.payloads.response.PagedResponse;
 import share.shop.payloads.response.ProductCardResponse;
 import share.shop.payloads.response.custom.ProductCard;
 import share.shop.payloads.response.custom.ProductDetails;
+import share.shop.payloads.response.custom.ProductsCard;
 import share.shop.payloads.response.icustom.ITProduct;
 import share.shop.repositories.ProductRepository;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -28,20 +30,33 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public void getProductCardByShopId(){
-
-        List<ITProduct> ITProducts = productRepository.getProductCardByShopId();
-        log.info("iProductCards {}", ITProducts.size());
+    public ProductsCard getPageProductCardByShopId(long shopId,long page){
 
 
-            ProductCard productCard = new ProductCard(ITProducts);
-            log.info(productCard.toString());
+        long size = page*5;
 
 
+
+        List<ITProduct> itProducts = productRepository.getProductCardByShopId(Instant.now(),shopId,size,page);
+
+
+        ProductsCard productsCard = new ProductsCard(itProducts);
+
+        return productsCard;
     }
 
-    public ProductDetails getProductDetailsById(){
-        List<ITProduct> itProducts = productRepository.getProductDetailsById();
+    public ProductsCard getProductCardByShopId(long shopId,long page, long size){
+
+        List<ITProduct> itProducts = productRepository.getProductCardByShopId(Instant.now(),shopId,size,page);
+
+
+        ProductsCard productsCard = new ProductsCard(itProducts);
+
+       return productsCard;
+    }
+
+    public ProductDetails getProductDetailsById(long productId ){
+        List<ITProduct> itProducts = productRepository.getProductDetailsById(Instant.now(),productId);
         ProductDetails productDetails = new ProductDetails( itProducts);
        // log.info("productDetails {}",productDetails.toString());
         return  productDetails;

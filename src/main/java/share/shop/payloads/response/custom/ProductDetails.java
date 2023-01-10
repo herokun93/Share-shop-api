@@ -17,9 +17,11 @@ public class ProductDetails {
     private String productName;
     private boolean productHot;
     private int productRating;
+    private String description;
     private String productDescriptionSort;
     private String productTiktok;
     private LocalDateTime productUntil;
+    private OPrice price;
     private HashSet<OImage> images;
     private HashSet<OTag> tags;
     public ProductDetails(List<ITProduct> itProducts) {
@@ -30,9 +32,19 @@ public class ProductDetails {
             this.productHot = itProduct.getProductHot();
             this.productRating = itProduct.getProductRating();
             this.productHot = itProduct.getProductHot();
+            this.description = itProduct.getProductDescription();
             this.productDescriptionSort = itProduct.getProductDescriptionSort();
             this.productTiktok = itProduct.getProductTiktok();
             this.productUntil = itProduct.getProductUntil();
+            this.price = new OPrice();
+
+            this.price.setPriceId(itProduct.getPriceId());
+            this.price.setPriceName(itProduct.getPriceName());
+            this.price.setPricePrice(itProduct.getPricePrice());
+            this.price.setPriceSalePrice(itProduct.getPriceSalePrice());
+            this.price.setPriceStartAt(itProduct.getPriceStartAt());
+            this.price.setPriceFinishAt(itProduct.getPriceFinishAt());
+            this.price.setPriceSale(itProduct.getPriceSale());
 
             this.images = new HashSet<OImage>();
             this.tags = new HashSet<OTag>();
@@ -44,8 +56,6 @@ public class ProductDetails {
                 OImage oImage = new OImage(p.getImageId(),p.getImageUrlSmall());
 
                 if(!images.contains(oImage)) images.add(oImage);
-
-
             });
         }
     };
