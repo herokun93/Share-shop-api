@@ -7,15 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import share.shop.exceptions.ResourceNotFoundException;
-import share.shop.mapper.ProductCardMapper;
-import share.shop.mapper.ProductDetailMapper;
+import share.shop.mapper.ProductMapper;
 import share.shop.models.*;
 import share.shop.payloads.request.ProductEditRequest;
 import share.shop.payloads.request.ProductRequest;
 import share.shop.payloads.request.ShopImageRequest;
 import share.shop.payloads.response.ImageResponse;
 import share.shop.payloads.response.PagedResponse;
-import share.shop.payloads.response.ProductCardResponse;
 import share.shop.payloads.response.ProductDetailsResponse;
 import share.shop.securities.UserLogged;
 import share.shop.services.*;
@@ -67,7 +65,7 @@ public class ProductController {
         if(!product.isPresent()){
             new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
-        return  new ResponseEntity(ProductDetailMapper.convert(product.get()), HttpStatus.OK);
+        return  new ResponseEntity(ProductMapper.toDetail(product.get()), HttpStatus.OK);
     }
     @PreAuthorize("hasRole('PARTNER')")
     @GetMapping(value = "/products/p/{id}")

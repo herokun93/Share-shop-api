@@ -5,25 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import share.shop.dto.ImageDto;
-import share.shop.dto.PriceDto;
-import share.shop.dto.ProductCardDto;
-import share.shop.dto.TagDto;
-import share.shop.mapper.ProductCardMapper;
+import share.shop.mapper.ProductMapper;
 import share.shop.models.Product;
-import share.shop.payloads.request.init.PartnerRequest;
-import share.shop.payloads.response.ProductCardResponse;
 import share.shop.repositories.CountryRepository;
 import share.shop.services.CountryService;
 import share.shop.services.InitService;
 import share.shop.services.ProductModeService;
 import share.shop.services.ProductService;
-
-import java.time.Instant;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -113,7 +103,7 @@ public class InitController {
 
        // new ProductCardResponse().productCardConvert(product
 
-        return ResponseEntity.ok(ProductCardMapper.convert(product));
+        return ResponseEntity.ok(ProductMapper.toDetail(product));
     }
 
 

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import share.shop.dto.comment.CommentProductDto;
-import share.shop.mapper.ProductCommentMapper;
+import share.shop.mapper.CommentMapper;
 import share.shop.models.Comment;
 import share.shop.payloads.response.CommentResponse;
 import share.shop.payloads.response.PagedResponse;
@@ -37,7 +37,7 @@ public class CommentService {
         }
 
 
-        List<CommentProductDto> listComment = ProductCommentMapper.listsConvert(comments.stream().toList());
+        List<CommentProductDto> listComment = CommentMapper.toListComments(comments.stream().toList());
 
 
         return new PagedResponse<>(listComment, comments.getNumber(), comments.getSize(), comments.getTotalElements(),

@@ -4,15 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.stereotype.Service;
 import share.shop.mapper.CountryMapper;
-import share.shop.mapper.ProductCardMapper;
+import share.shop.mapper.ProductMapper;
 import share.shop.models.Country;
 import share.shop.models.Product;
-import share.shop.payloads.response.CountryResponse;
 import share.shop.payloads.response.PagedResponse;
-import share.shop.payloads.response.ProductCardResponse;
 import share.shop.repositories.CountryRepository;
 import share.shop.repositories.ProductRepository;
 
@@ -90,7 +87,7 @@ public class CountryService {
 
 
 
-        return new PagedResponse<>(ProductCardMapper.listConvert(products.stream().toList()),products.getNumber(),products.getSize(),products.getTotalElements(),
+        return new PagedResponse<>(ProductMapper.toListCards(products.stream().toList()),products.getNumber(),products.getSize(),products.getTotalElements(),
                 products.getTotalPages(),products.isLast());
     }
 }

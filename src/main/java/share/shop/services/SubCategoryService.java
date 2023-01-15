@@ -6,18 +6,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import share.shop.mapper.ProductCardMapper;
+import share.shop.mapper.ProductMapper;
 import share.shop.mapper.SubCategoryMapper;
 import share.shop.models.Product;
 import share.shop.models.SubCategory;
 import share.shop.payloads.response.PagedResponse;
-import share.shop.payloads.response.ProductCardResponse;
-import share.shop.payloads.response.SubCategoryResponse;
 import share.shop.repositories.ProductRepository;
 import share.shop.repositories.SubCategoryRepository;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -64,7 +61,7 @@ public class SubCategoryService {
             return new PagedResponse(Collections.emptyList(),products.getNumber(),products.getSize(),
                     products.getTotalElements(),products.getTotalPages(),products.isLast());
         }
-        return new PagedResponse<>(ProductCardMapper.listConvert(products.stream().toList()),products.getNumber(),products.getSize(),products.getTotalElements(),
+        return new PagedResponse<>(ProductMapper.toListCards(products.stream().toList()),products.getNumber(),products.getSize(),products.getTotalElements(),
                 products.getTotalPages(),products.isLast());
     }
 

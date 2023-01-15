@@ -7,9 +7,8 @@ import share.shop.models.Comment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductCommentMapper {
-
-    public static CommentProductDto convert(Comment comment){
+public class CommentMapper {
+    public static CommentProductDto commentConvert(Comment comment){
 
         ModelMapper modelMapper = new ModelMapper();
 
@@ -17,11 +16,11 @@ public class ProductCommentMapper {
         return  commentProductDto;
     }
 
-    public static List<CommentProductDto> listsConvert(List<Comment> commentList){
+    public static List<CommentProductDto> toListComments(List<Comment> commentList){
 
         List<CommentProductDto> productComments = new ArrayList<>();
         commentList.forEach(comment -> {
-            productComments.add(convert(comment));
+            productComments.add(commentConvert(comment));
         });
 
         return  productComments;

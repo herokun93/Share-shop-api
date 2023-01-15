@@ -7,12 +7,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import share.shop.dto.ProductCardDto;
-import share.shop.mapper.ProductCardMapper;
-import share.shop.mapper.TagsMapper;
+import share.shop.mapper.ProductMapper;
+import share.shop.mapper.TagMapper;
 import share.shop.models.Product;
 import share.shop.models.Tag;
 import share.shop.payloads.response.PagedResponse;
-import share.shop.payloads.response.TagResponse;
 import share.shop.repositories.ProductRepository;
 import share.shop.repositories.TagRepository;
 
@@ -53,14 +52,14 @@ public class TagService {
             return new PagedResponse(Collections.emptyList(),tags.getNumber(),tags.getSize(),
                     tags.getTotalElements(),tags.getTotalPages(),tags.isLast());
         }
-        return new PagedResponse<>(TagsMapper.listTags(tags.stream().toList()),tags.getNumber(),tags.getSize(),tags.getTotalElements(),
+        return new PagedResponse<>(TagMapper.listTags(tags.stream().toList()),tags.getNumber(),tags.getSize(),tags.getTotalElements(),
                 tags.getTotalPages(),tags.isLast());
     }
 
     public List<ProductCardDto> getProductByTagId(Long id){
         Optional<Tag> tag = tagRepository.findById(id);
 
-        return ProductCardMapper.listConvert(tag.get().getProducts().stream().toList());
+        return ProductMapper.toListCards(tag.get().getProducts().stream().toList());
 
     }
 

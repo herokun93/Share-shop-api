@@ -8,21 +8,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import share.shop.dto.ProductCardDto;
-import share.shop.mapper.ProductCardMapper;
-import share.shop.models.Country;
+import share.shop.mapper.ProductMapper;
 import share.shop.models.Product;
 import share.shop.payloads.response.PagedResponse;
 import share.shop.payloads.response.ProductCardResponse;
-import share.shop.payloads.response.custom.ProductCard;
 import share.shop.payloads.response.custom.ProductDetails;
 import share.shop.payloads.response.custom.ProductsCard;
-import share.shop.payloads.response.icustom.ITProduct;
 import share.shop.repositories.ProductRepository;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.time.Instant;
 import java.util.*;
 
 @Service
@@ -102,7 +98,7 @@ public class ProductService {
                     products.getTotalElements(), products.getTotalPages(), products.isLast());
         }
 
-        return new PagedResponse<>(ProductCardMapper.listConvert(products.stream().toList()), products.getNumber(), products.getSize(), products.getTotalElements(),
+        return new PagedResponse<>(ProductMapper.toListCards(products.stream().toList()), products.getNumber(), products.getSize(), products.getTotalElements(),
                 products.getTotalPages(), products.isLast());
     }
 
@@ -132,7 +128,7 @@ public class ProductService {
                     products.getTotalElements(), products.getTotalPages(), products.isLast());
         }
 
-        List<ProductCardDto> cardDtoList = ProductCardMapper.listConvert(products.stream().toList());
+        List<ProductCardDto> cardDtoList = ProductMapper.toListCards(products.stream().toList());
 
         return new PagedResponse<>(cardDtoList, products.getNumber(), products.getSize(), products.getTotalElements(),
                 products.getTotalPages(), products.isLast());
@@ -147,7 +143,7 @@ public class ProductService {
                     products.getTotalElements(), products.getTotalPages(), products.isLast());
         }
 
-        List<ProductCardDto> cardDtoList = ProductCardMapper.listConvert(products.stream().toList());
+        List<ProductCardDto> cardDtoList = ProductMapper.toListCards(products.stream().toList());
 
         return new PagedResponse<>(cardDtoList, products.getNumber(), products.getSize(), products.getTotalElements(),
                 products.getTotalPages(), products.isLast());
@@ -183,7 +179,7 @@ public class ProductService {
                     products.getTotalElements(), products.getTotalPages(), products.isLast());
         }
 
-        List<ProductCardDto> cardDtoList = ProductCardMapper.listConvert(products.stream().toList());
+        List<ProductCardDto> cardDtoList = ProductMapper.toListCards(products.stream().toList());
 
         return new PagedResponse<>(cardDtoList, products.getNumber(), products.getSize(), products.getTotalElements(),
                 products.getTotalPages(), products.isLast());

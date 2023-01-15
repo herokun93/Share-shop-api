@@ -1,14 +1,13 @@
 package share.shop.mapper;
 
 import org.modelmapper.ModelMapper;
-import share.shop.dto.TagDto;
 import share.shop.dto.TagViewDto;
 import share.shop.models.Tag;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagsMapper {
+public class TagMapper {
     public static TagViewDto convert(Tag tag){
         ModelMapper modelMapper = new ModelMapper();
         TagViewDto tagViewDto = modelMapper.map(tag,TagViewDto.class);
