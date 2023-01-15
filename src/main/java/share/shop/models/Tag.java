@@ -1,15 +1,13 @@
 package share.shop.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import share.shop.models.audit.DateAudit;
 import share.shop.models.audit.UserDateAudit;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -23,8 +21,19 @@ public class Tag extends UserDateAudit {
     private String name;
     private boolean enable;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL,mappedBy = "tags")
+    @ManyToMany(mappedBy = "tags",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Collection<Product> products;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Tag tag = (Tag) o;
+        return Objects.equals(id, tag.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

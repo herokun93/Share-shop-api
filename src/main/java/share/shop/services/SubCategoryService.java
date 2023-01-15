@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import share.shop.mapper.ProductCardMapper;
+import share.shop.mapper.SubCategoryMapper;
 import share.shop.models.Product;
 import share.shop.models.SubCategory;
 import share.shop.payloads.response.PagedResponse;
@@ -44,13 +46,14 @@ public class SubCategoryService {
                     subCategories.getTotalElements(),subCategories.getTotalPages(),subCategories.isLast());
         }
 
-        List<SubCategoryResponse> categoryResponsesPage = subCategories.map(subCategory -> {
-            SubCategoryResponse subCategoryResponse = new SubCategoryResponse();
-            return subCategoryResponse.subCategoryConvert(subCategory);
-        }).getContent();
 
-        return new PagedResponse<>(categoryResponsesPage,subCategories.getNumber(),subCategories.getSize(),subCategories.getTotalElements(),
-                subCategories.getTotalPages(),subCategories.isLast());
+
+        return new PagedResponse<>(SubCategoryMapper.listConverts(subCategories.stream().toList()),
+                subCategories.getNumber(),
+                subCategories.getSize(),
+                subCategories.getTotalElements(),
+                subCategories.getTotalPages(),
+                subCategories.isLast());
     }
 
     public PagedResponse getAllProductForSubCategory(int subCategoryId,int page, int size) {
@@ -61,13 +64,7 @@ public class SubCategoryService {
             return new PagedResponse(Collections.emptyList(),products.getNumber(),products.getSize(),
                     products.getTotalElements(),products.getTotalPages(),products.isLast());
         }
-
-        List<ProductCardResponse> productCardResponseList = products.map(product -> {
-            ProductCardResponse productCardResponse = new ProductCardResponse();
-            return productCardResponse.productCardConvert(product);
-        }).getContent();
-
-        return new PagedResponse<>(productCardResponseList,products.getNumber(),products.getSize(),products.getTotalElements(),
+        return new PagedResponse<>(ProductCardMapper.listConvert(products.stream().toList()),products.getNumber(),products.getSize(),products.getTotalElements(),
                 products.getTotalPages(),products.isLast());
     }
 

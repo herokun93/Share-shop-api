@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import share.shop.exceptions.ResourceNotFoundException;
+import share.shop.mapper.ProductCardMapper;
+import share.shop.mapper.ProductDetailMapper;
 import share.shop.models.*;
 import share.shop.payloads.request.ProductEditRequest;
 import share.shop.payloads.request.ProductRequest;
@@ -61,11 +63,11 @@ public class ProductController {
     public ResponseEntity getProduct(@PathVariable("id") @Min(0) long id){
 
         Optional<Product> product = productService.findById(id);
-        ProductDetailsResponse productDetailsResponse = new ProductDetailsResponse();
+
         if(!product.isPresent()){
             new ResponseEntity(null, HttpStatus.BAD_REQUEST);
         }
-        return  new ResponseEntity(productDetailsResponse.productDetailsConvert(product.get()), HttpStatus.OK);
+        return  new ResponseEntity(ProductDetailMapper.convert(product.get()), HttpStatus.OK);
     }
     @PreAuthorize("hasRole('PARTNER')")
     @GetMapping(value = "/products/p/{id}")
@@ -78,17 +80,6 @@ public class ProductController {
         }
         return  new ResponseEntity(productDetailsResponse.productDetailsConvert(product.get()), HttpStatus.OK);
     }
-
-    @GetMapping(value = "/products/{id}/card")
-    public ResponseEntity getProductCard(@PathVariable("id") @Min(0) long id){
-        Optional<Product> product = productService.findById(id);
-        ProductCardResponse productCardResponse = new ProductCardResponse();
-        if(!product.isPresent()){
-            new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-        }
-        return  new ResponseEntity(productCardResponse.productCardConvert(product.get()), HttpStatus.OK);
-    }
-
 
 
     @ResponseBody
@@ -220,16 +211,16 @@ public class ProductController {
 
         product.setName(name);
         product.setHot(false);
-        if(productEditRequest.getSale().contains("true")){
-            product.setSale(true);
-        }else product.setSale(false);
+//        if(productEditRequest.getSale().contains("true")){
+//            product.setSale(true);
+//        }else product.setSale(false);
         product.setRating(3);
         product.setDescription(description);
         product.setDescriptionSort(descriptionSort);
         product.setTiktok(tiktok);
         product.setCountry(countryGet);
-        product.setPrice(price);
-        product.setSalePrice(salePrice);
+//        product.setPrice(price);
+//        product.setSalePrice(salePrice);
         product.setSubCategory(subCategoryGet);
 
 
@@ -253,7 +244,7 @@ public class ProductController {
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size,
             @RequestParam(value = "mode", defaultValue = AppConstants.DEFAULT_PRODUCT_FEATURED_SIZE) int mode) {
-        return productService.getAllProductsModeAndEnable(mode,page,size,true);
+        return productService.getProductsByProductModeAndEnable(mode,page,size,true);
     }
 
 

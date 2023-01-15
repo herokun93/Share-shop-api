@@ -82,11 +82,11 @@ public class TagController {
     }
 
     @GetMapping(value="/tags/{id}/products")
-    public PagedResponse getAllProductsOfTag(
-            @Valid  @PathVariable("id") @Min(0) Long tagId,
+    public ResponseEntity getAllProductsOfTag(
+            @Valid  @PathVariable("id") @Min(0) long tagId,
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
             @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE) int size) {
-        return tagService.getAllTags(page,size);
+        return new ResponseEntity(tagService.findAllPagedByTagId(page,size,tagId),HttpStatus.OK);
     }
 
     @PostMapping(value="/tags/{id}/addProduct")

@@ -5,13 +5,20 @@ import share.shop.models.audit.UserDateAudit;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
+@NamedEntityGraph(name="product.detail",
+        attributeNodes = {
+        }
+)
 public class Product extends UserDateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +32,6 @@ public class Product extends UserDateAudit {
     private boolean enable;
     private int mode;
     private LocalDateTime until;
-    private boolean sale;
-    private long price;
-    private long salePrice;
-    private String slug;
 
 
     public Product(String name, boolean hot, int rating, String description, String descriptionSort, String tiktok, boolean enable) {
@@ -43,7 +46,7 @@ public class Product extends UserDateAudit {
     }
 
     //
-//    @ManyToOne(fetch = FetchType.LAZY,optional = false)
+//    @ManyToOne(,optional = false)
 //    @JoinColumn(name="user_id")
 //    private User user;
 
@@ -63,12 +66,12 @@ public class Product extends UserDateAudit {
     @JoinColumn(name="shop_id")
     private Shop shop;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.PERSIST)
     @JoinColumn(name = "tag_id", referencedColumnName = "id")
-    private Collection<Tag> tags;
+    private Set<Tag> tags;
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
-    private Collection<Image> images;
+    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY,cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private Set<Image> images;
 
     @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
     private Collection<Comment> comments;
@@ -79,5 +82,7 @@ public class Product extends UserDateAudit {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="product_mode_id")
     private ProductMode productMode;
+
+
 
 }

@@ -1,11 +1,9 @@
 package share.shop.models;
 
 import lombok.*;
-import share.shop.models.audit.DateAudit;
 import share.shop.models.audit.UserDateAudit;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.util.Collection;
 
 @Entity
@@ -13,6 +11,20 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@NamedEntityGraph(name="country",
+        attributeNodes = {
+                @NamedAttributeNode("name"),
+                @NamedAttributeNode(value = "products", subgraph = "country.products"),
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "country.products",
+                        attributeNodes = {
+                                @NamedAttributeNode(value="tags")
+                        }
+                )
+        }
+)
 public class Country extends UserDateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +37,6 @@ public class Country extends UserDateAudit {
         this.enable = enable;
     }
 
-    @OneToMany(mappedBy = "country",fetch = FetchType.LAZY)
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "country")
     private Collection<Product> products;
 }

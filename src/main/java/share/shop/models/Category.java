@@ -9,7 +9,9 @@ import share.shop.models.audit.UserDateAudit;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -31,6 +33,10 @@ public class Category extends UserDateAudit {
     }
 
     @OneToMany(mappedBy = "category",fetch = FetchType.LAZY)
-    private List<SubCategory> subCategories;
+    private Collection<SubCategory> subCategories;
 
+    @PostLoad
+    public void postLoad() {
+
+    }
 }

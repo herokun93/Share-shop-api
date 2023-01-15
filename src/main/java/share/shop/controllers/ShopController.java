@@ -392,9 +392,6 @@ public class ShopController {
                 .subCategory(subCategoryGet)
                 .descriptionSort(descriptionSort)
                 .shop(shopGet)
-                .sale(sale)
-                .price(price)
-                .salePrice(salePrice)
                 .build();
 
 

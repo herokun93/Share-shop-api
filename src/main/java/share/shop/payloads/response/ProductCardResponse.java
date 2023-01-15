@@ -34,41 +34,41 @@ public class ProductCardResponse {
     private long salePrice;
     private String slug;
     private LocalDateTime until;
-    private List<ImageResponse> imageResponseList;
-    private List<TagResponse> tagResponseList;
-    private List<PriceResponse> priceResponses;
+    private Collection<ImageResponse> images;
+    private Collection<TagResponse> tags;
+    private List<PriceResponse> prices;
 
     public ProductCardResponse productCardConvert(Product product){
         ModelMapper modelMapper = new ModelMapper();
-        imageResponseList = new ArrayList<>();
-        priceResponses = new ArrayList<>();
-        tagResponseList = new ArrayList<>();
+        images = new ArrayList<>();
+        prices = new ArrayList<>();
+        tags = new ArrayList<>();
 
-        Collection<Image> images = product.getImages();
+       Collection<Image> entityImage = product.getImages();
 
-        if(images.size()>=1){
-            ImageResponse imageResponse = new ImageResponse();
-            imageResponseList.add(imageResponse.imageResponseConvert(images.stream().findFirst().get()));
+
+        if(entityImage.size()>=1){
+            images.add(new ImageResponse().imageResponseConvert(entityImage.stream().findFirst().get()));
         }
 
 
 
-        Collection<Tag> tags = product.getTags();
-        tags.forEach(t->{
+        Collection<Tag> entityTags = product.getTags();
+        entityTags.forEach(t->{
             TagResponse tagResponse = new TagResponse();
-            tagResponseList.add(tagResponse.tagConvert(t));
+            tags.add(tagResponse.tagConvert(t));
         });
 
-        Collection<Price> prices = product.getPrices();
-        prices.forEach(p->{
-            priceResponses.add(new PriceResponse().priceResponseConvert(p));
+        Collection<Price> entityPrices = product.getPrices();
+        entityPrices.forEach(p->{
+            prices.add(new PriceResponse().priceResponseConvert(p));
         });
 
 
         ProductCardResponse productCardResponse = modelMapper.map(product, ProductCardResponse.class);
-        productCardResponse.setImageResponseList(imageResponseList);
-        productCardResponse.setTagResponseList(tagResponseList);
-        productCardResponse.setPriceResponses(priceResponses);
+        productCardResponse.setImages(images);
+        productCardResponse.setTags(tags);
+        productCardResponse.setPrices(prices);
 
         return productCardResponse;
     }

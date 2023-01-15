@@ -6,6 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import share.shop.mapper.CategoryMapper;
+import share.shop.mapper.SubCategoryMapper;
 import share.shop.models.Category;
 import share.shop.models.SubCategory;
 import share.shop.payloads.response.CategoryResponse;
@@ -53,30 +55,24 @@ public class CategoryService {
                     categories.getTotalElements(),categories.getTotalPages(),categories.isLast());
         }
 
-        List<CategoryResponse> categoryResponsesPage = categories.map(category -> {
-            CategoryResponse categoryResponse = new CategoryResponse();
-            return categoryResponse.categoryResponseConvert(category);
-        }).getContent();
 
-        return new PagedResponse<>(categoryResponsesPage,categories.getNumber(),categories.getSize(),categories.getTotalElements(),
+
+        return new PagedResponse<>(CategoryMapper.listCategories(categories.toList()),categories.getNumber(),categories.getSize(),categories.getTotalElements(),
                 categories.getTotalPages(),categories.isLast());
     }
 
     public PagedResponse getAllSubCategoryOfCategory(long categoryId,int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<SubCategory> subCategories = subCategoryRepository.findAllByCategoryIdAndEnable(categoryId,false,pageable);
+        Page<SubCategory> subCategories = subCategoryRepository.findAllByCategoryIdAndEnable(categoryId,true,pageable);
 
         if(subCategories.getNumberOfElements() ==0){
             return new PagedResponse(Collections.emptyList(),subCategories.getNumber(),subCategories.getSize(),
                     subCategories.getTotalElements(),subCategories.getTotalPages(),subCategories.isLast());
         }
 
-        List<SubCategoryResponse> subCategoryResponses = subCategories.map(subCategory -> {
-            SubCategoryResponse subCategoryResponse = new SubCategoryResponse();
-            return subCategoryResponse.subCategoryConvert(subCategory);
-        }).getContent();
 
-        return new PagedResponse<>(subCategoryResponses,subCategories.getNumber(),subCategories.getSize(),subCategories.getTotalElements(),
+
+        return new PagedResponse<>(SubCategoryMapper.listConverts(subCategories.stream().toList()),subCategories.getNumber(),subCategories.getSize(),subCategories.getTotalElements(),
                 subCategories.getTotalPages(),subCategories.isLast());
     }
 

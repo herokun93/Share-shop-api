@@ -2,9 +2,7 @@ package share.shop.payloads.response;
 
 import lombok.*;
 import org.modelmapper.ModelMapper;
-import share.shop.models.Image;
 import share.shop.models.Price;
-import share.shop.utils.ImageToUrl;
 
 import java.time.Instant;
 

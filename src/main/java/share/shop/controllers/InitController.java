@@ -1,5 +1,6 @@
 package share.shop.controllers;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -7,12 +8,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import share.shop.dto.ImageDto;
+import share.shop.dto.PriceDto;
+import share.shop.dto.ProductCardDto;
+import share.shop.dto.TagDto;
+import share.shop.mapper.ProductCardMapper;
+import share.shop.models.Product;
 import share.shop.payloads.request.init.PartnerRequest;
+import share.shop.payloads.response.ProductCardResponse;
+import share.shop.repositories.CountryRepository;
+import share.shop.services.CountryService;
 import share.shop.services.InitService;
 import share.shop.services.ProductModeService;
 import share.shop.services.ProductService;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -26,6 +37,15 @@ public class InitController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private CountryRepository countryRepository;
+
+    @Autowired
+    private CountryService countryService;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @GetMapping(value = "/init/home2")
     public ResponseEntity getProductCard2(){
@@ -56,6 +76,9 @@ public class InitController {
 
         // productService.getProductCardByShopId();
 
+//        long a = 1;
+//        System.out.println(productService.findById(a).get().toString());
+
 
 
 
@@ -63,6 +86,35 @@ public class InitController {
         return ResponseEntity.ok(productService.getProductCardByShopId(1,0,2));
     }
 
+    @GetMapping(value = "/init/country")
+    public ResponseEntity country(){
+        long conuntryId =1;
+
+        return ResponseEntity.ok(countryService.findByIdTest(conuntryId));
+    }
+
+    @GetMapping(value = "/init/product")
+    public ResponseEntity product(){
+        long productId =1;
+
+        Product product = productService.findProductById(productId);
+        System.out.println("get tag");
+
+//        ProductCardDto productCardDto = modelMapper.map(product,ProductCardDto.class);
+//        productCardDto.setImages(product.getImages().stream()
+//                .map(images -> modelMapper.map(images,ImageDto.class)).collect(Collectors.toList()));
+//
+//        productCardDto.setTags(product.getTags().stream()
+//                .map(tags -> modelMapper.map(tags, TagDto.class)).collect(Collectors.toList()));
+//
+//        productCardDto.setPrices(product.getPrices().stream()
+//                .map(prices -> modelMapper.map(prices, PriceDto.class)).collect(Collectors.toList()));
+
+
+       // new ProductCardResponse().productCardConvert(product
+
+        return ResponseEntity.ok(ProductCardMapper.convert(product));
+    }
 
 
 

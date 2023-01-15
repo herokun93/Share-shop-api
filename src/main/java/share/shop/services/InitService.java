@@ -3,8 +3,10 @@ package share.shop.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import share.shop.dto.ProductCardDto;
 import share.shop.models.Category;
 import share.shop.models.Country;
+import share.shop.models.Product;
 import share.shop.models.ProductMode;
 import share.shop.payloads.response.CategoriesResponse;
 import share.shop.payloads.response.CategoryResponse;
@@ -61,6 +63,19 @@ public class InitService {
 //        InitResponse initResponse = InitResponse.builder()
 //                .productModes(new ProductModeResponse().setProductModesResponse(productModes))
 //                .categories(categoryResponses)
+//                .build();
+
+
+
+
+
+
+
+//        InitResponse initResponse = InitResponse.builder()
+//                .productModes(new ProductModeResponse().setProductModesResponse(productModes))
+//                .categories(categoryResponses)
+//                .features(productService.getAllProductsByProductModeAndEnable(1,0,20,true).getContent())
+//                .products(productService.getAllProductsForShop(Long.valueOf(1),0,20).getContent())
 //                .build();
 
         InitResponse initResponse = InitResponse.builder()

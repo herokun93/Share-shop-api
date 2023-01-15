@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import share.shop.models.Category;
-import share.shop.models.SubCategory;
+import share.shop.models.Product;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,10 +26,12 @@ public interface CategoryRepository extends JpaRepository<Category,Long> {
         @Modifying
         @Transactional
         List<Category> test();
+
         Optional<Category> findById(Long id);
         Optional<Category> findByName(String name);
         List<Category> findAllByEnable(boolean enable);
         List<Category> findAllByEnable(Sort sort, boolean enable);
+
         boolean existsByName(String name);
 
 }

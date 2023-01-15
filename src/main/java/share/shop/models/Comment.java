@@ -30,4 +30,8 @@ public class Comment extends DateAudit {
     private User user;
 
 
+    @PostUpdate
+    public void postUpdate() {
+
+    }
 }
