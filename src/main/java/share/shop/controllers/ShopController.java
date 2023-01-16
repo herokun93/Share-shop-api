@@ -9,11 +9,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import share.shop.exceptions.ResourceNotFoundException;
+import share.shop.mapper.ShopMapper;
 import share.shop.models.*;
 import share.shop.payloads.request.*;
 import share.shop.payloads.response.ImageResponse;
 import share.shop.payloads.response.PagedResponse;
-import share.shop.payloads.response.ShopInfoResponse;
 import share.shop.securities.UserLogged;
 import share.shop.services.*;
 import share.shop.utils.AppConstants;
@@ -337,13 +337,13 @@ public class ShopController {
 
     }
 
-    @GetMapping(value = "/shops/{id}/information")
+    @GetMapping(value = "/shops/{id}/info")
     public ResponseEntity getShopInfoById(@Valid @PathVariable("id") Long shopId)
     {
         Shop shop = shopService.findById(shopId).orElseThrow(
                 ()->new ResourceNotFoundException("Shop","id",shopId));
-        ShopInfoResponse shopInfoResponse = new ShopInfoResponse();
-        return  ResponseEntity.ok(shopInfoResponse.shopInfoResponse(shop));
+
+        return  ResponseEntity.ok(ShopMapper.toShopInfo(shop));
     }
 
     @GetMapping(value = "/shops/{name}/details")
@@ -351,7 +351,7 @@ public class ShopController {
     {
         Shop shop = shopService.findByName(shopName).orElseThrow(
                 ()->new ResourceNotFoundException("Shop","name",shopName));
-        return  ResponseEntity.ok(new ShopInfoResponse().shopInfoResponse(shop));
+        return  ResponseEntity.ok(ShopMapper.toShopInfo(shop));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN','PARTNER')")

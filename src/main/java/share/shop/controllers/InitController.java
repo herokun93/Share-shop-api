@@ -37,51 +37,6 @@ public class InitController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @GetMapping(value = "/init/home2")
-    public ResponseEntity getProductCard2(){
-
-       // productService.getProductCardByShopId();
-        //productService.getProductDetailsById(1);
-
-
-
-
-        return ResponseEntity.ok(initService.home());
-    }
-
-    @GetMapping(value = "/init/xxx")
-    public ResponseEntity xxx(){
-
-        // productService.getProductCardByShopId();
-
-
-
-
-
-        return ResponseEntity.ok(productService.getProductDetailsById(1));
-    }
-
-    @GetMapping(value = "/init/shop")
-    public ResponseEntity getProductCardByShopId(){
-
-        // productService.getProductCardByShopId();
-
-//        long a = 1;
-//        System.out.println(productService.findById(a).get().toString());
-
-
-
-
-
-        return ResponseEntity.ok(productService.getProductCardByShopId(1,0,2));
-    }
-
-    @GetMapping(value = "/init/country")
-    public ResponseEntity country(){
-        long conuntryId =1;
-
-        return ResponseEntity.ok(countryService.findByIdTest(conuntryId));
-    }
 
     @GetMapping(value = "/init/product")
     public ResponseEntity product(){
@@ -110,16 +65,11 @@ public class InitController {
 
 
     @GetMapping(value = "/init/home")
-    public ResponseEntity getProductCard(){
-
-
-
-
-//        Optional<Product> product = productService.findById(id);
-//        ProductCard productCard = new ProductCard();
-//        if(!product.isPresent()){
-//            new ResponseEntity(null, HttpStatus.BAD_REQUEST);
-//        }
+    public ResponseEntity home(){
+        return ResponseEntity.ok(initService.home());
+    }
+    @GetMapping(value = "/init/home2")
+    public ResponseEntity home2(){
         return ResponseEntity.ok(initService.home());
     }
 //    @PreAuthorize("hasAnyRole('PARTNER','ADMIN')")

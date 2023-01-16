@@ -104,7 +104,7 @@ public class SubCategoryController {
         return subCategoryService.getAllSubCategories(page,size);
     }
 
-    @GetMapping(value="/subCategories/{id}")
+    @GetMapping(value="/subCategories/{id}/products")
     public PagedResponse getAllProductForSubCategory(
             @PathVariable("id")  int subCategoryId,
             @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER) int page,
